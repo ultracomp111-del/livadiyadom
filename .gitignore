@@ -1,0 +1,42 @@
+# Зависимости (Весят много, Timeweb установит их сам)
+node_modules/
+.pnp
+.pnp.js
+
+# ВНИМАНИЕ: package-lock.json мы НЕ игнорируем. 
+# Он должен улететь в Git, чтобы версии библиотек не "поплыли".
+
+# Сборка (Нам не нужно хранить готовую папку в Git, Timeweb сам ее создаст)
+dist/
+dist-ssr/
+build/
+*.local
+
+# Переменные окружения (Безопасность: чтобы никто не украл твои ключи Environment variables)
+.env
+.env.local
+.env.*.local
+
+# Логи (Технический мусор от ошибок)
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE / Редакторы кода (Настройки твоего VS Code или WebStorm)
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Системные файлы (Мусор от Windows и macOS)
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
+
+# Прочее
+.eslintcache

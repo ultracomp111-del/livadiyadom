@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Гостевой дом в Ливадии</title>
+
+    <script type="module" src="./script.js"></script>
+
+    <link rel="stylesheet" href="./styles.css" />
+
+    <link rel="shortcut icon" href="./icons/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.webp" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container header__inner">
+        <a href="./index.html" class="brand">
+          <span class="brand__logo">Л</span>
+          <div class="brand__text">
+            <span class="brand__title">Гостевой дом</span>
+            <span class="brand__sub">Ливадия • Ялта</span>
+          </div>
+        </a>
+        <nav class="nav">
+          <div class="nav__links">
+            <a href="#about">О доме</a>
+            <a href="#gallery">Галерея</a>
+            <a href="#location">Бронь</a>
+            <a href="#faq">FAQ</a>
+            <a href="./livadia.html" class="nav__link--alt">Ливадия</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero-main">
+        <div class="container hero-main__container">
+          <div class="hero-main__content">
+            <h1 class="hero__title">Ваш тихий уголок в Ливадии</h1>
+            <p class="hero__subtitle">
+              Уютный дом в паре шагов от Ливадийского дворца и Царской тропы. Идеальное место для восстановления сил.
+            </p>
+            <a href="#contacts" class="btn-main">Забронировать отдых</a>
+          </div>
+          <div class="hero-main__image-wrap">
+            <img src="photo/03.jpg" alt="Наш гостевой дом" class="main-hero-img" />
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container">
+          <div class="atmosphere-inner">
+            <div class="atmosphere-text">
+              <h2 style="text-align: center; color: #3b3b3c">Атмосфера дома</h2>
+              <ul class="check-list">
+                <li><b>Светлые интерьеры</b> и натуральное дерево.</li>
+                <li><b>Тихий район</b> — только пение птиц.</li>
+                <li><b>Все удобства</b> — Wi-Fi, белье, комфорт.</li>
+                <li><b>Рядом достопримечательности</b> — Ливадийский дворец.</li>
+                <li><b>Идеально для семьи</b> — 2 отдельные спальни.</li>
+              </ul>
+            </div>
+            <div class="features-grid">
+              <a href="livadia.html#palace" class="f-card">
+                <img src="./icons/palace.webp" alt="Дворец" class="f-card__img" />
+                <p>Дворец</p>
+              </a>
+              <a href="livadia.html#park" class="f-card">
+                <img src="./icons/park.webp" alt="Park" class="f-card__img" />
+                <p>Парк</p>
+              </a>
+              <a href="livadia.html#tropa" class="f-card">
+                <img src="./icons/tropa.webp" alt="Tropa" class="f-card__img" />
+                <p>Солнечная тропа</p>
+              </a>
+              <a href="livadia.html#akvapark" class="f-card">
+                <img src="./icons/akvapark.webp" alt="Akvapark" class="f-card__img" />
+                <p>Аквапарк</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--light" id="gallery">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 30px">
+            <h2 class="section-title">Фотогалерея</h2>
+            <p class="muted">Нажмите на фото, чтобы увеличить и листать</p>
+          </div>
+          <div class="carousel" data-carousel="home">
+            <div class="carousel__viewport">
+              <button class="carousel__btn prev" data-prev>‹</button>
+              <div class="carousel__main-click-area" data-zoom-trigger>
+                <img src="photo/01.jpg" class="carousel__main-img" data-main-img alt="Фото" />
+              </div>
+              <button class="carousel__btn next" data-next>›</button>
+            </div>
+            <div class="carousel__info"><span data-count>1 / 20</span></div>
+            <div class="carousel__thumbs-wrap">
+              <div class="thumbs-scroller" data-thumbs></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="location">
+        <div class="container">
+          <h2 class="section-title" style="text-align: center; margin-bottom: 40px">Контакты и Бронь</h2>
+
+          <div class="contacts-booking-wrapper">
+            <div class="left-column-contact">
+              <div class="contacts-section" id="contacts">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Контакты</h3>
+                <div class="contact-box" style="padding: 0">
+                  <strong>Адрес:</strong>
+                  <p>Ялта, Ливадия, ул. Батурина</p>
+                  <strong style="display: block; margin-top: 16px">Телефон (Telegram, WhatsApp):</strong>
+                  <a href="tel:+70000000000" class="contact-link">+7 (000) 000-00-00</a>
+                </div>
+              </div>
+
+              <div class="booking-section">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Оставить заявку</h3>
+                <form id="booking-form" class="booking-form">
+                  <input type="text" name="name" placeholder="Ваше имя" required />
+                  <input
+                    type="number"
+                    name="guests"
+                    placeholder="Кол-во гостей"
+                    min="1"
+                    required
+                    title="Укажите количество гостей (взрослые + дети)" />
+
+                  <input type="tel" name="phone" placeholder="Телефон" required />
+                  <div class="desktop-only"></div>
+
+                  <input
+                    type="text"
+                    name="date_start"
+                    placeholder="Дата заезда"
+                    onfocus="this.type = 'date'"
+                    onblur="if (!this.value) this.type = 'text';"
+                    required
+                    title="Дата заезда" />
+                  <input
+                    type="text"
+                    name="date_end"
+                    placeholder="Дата выезда"
+                    onfocus="this.type = 'date'"
+                    onblur="if (!this.value) this.type = 'text';"
+                    required
+                    title="Дата выезда" />
+
+                  <textarea name="wishes" class="full-width" placeholder="Дополнительные пожелания" rows="3"></textarea>
+
+                  <button type="submit" class="btn-main full-width">📥 Отправить заявку</button>
+                </form>
+              </div>
+            </div>
+
+            <div class="right-column-calendar">
+              <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Свободные даты</h3>
+              <div class="calendar-card">
+                <div class="calendar-header">
+                  <button id="cal-prev" class="cal-btn">‹</button>
+                  <div id="cal-month-year" class="cal-title">Май 2026</div>
+                  <button id="cal-next" class="cal-btn">›</button>
+                </div>
+                <div class="calendar-weekdays">
+                  <div>Пн</div>
+                  <div>Вт</div>
+                  <div>Ср</div>
+                  <div>Чт</div>
+                  <div>Пт</div>
+                  <div>Сб</div>
+                  <div>Вс</div>
+                </div>
+                <div id="calendar-days" class="calendar-days"></div>
+                <div class="calendar-legend">
+                  <span class="legend-item">
+                    <span class="legend-color legend-free"></span>
+                    Свободно
+                  </span>
+                  <span class="legend-item">
+                    <span class="legend-color legend-booked"></span>
+                    Занято
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 40px">
+            <h3 style="font-size: 16px; font-weight: 700; text-align: center; color: #3b3b3c; margin-bottom: 20px">Карта</h3>
+            <div class="map-wrapper">
+              <a
+                href="https://yandex.com/maps/?ll=34.147352%2C44.474560&mode=routes&rtext=~44.472434%2C34.143454&rtt=comparison&ruri=~&z=15.8"
+                target="_blank"
+                class="static-map">
+                <div class="static-map__label">Открыть на карте</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--light" id="faq">
+        <div class="container">
+          <div class="text-center" style="margin-bottom: 30px">
+            <h2 class="section-title">Часто задаваемые вопросы</h2>
+          </div>
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary class="faq-summary">Какой минимальный срок бронирования?</summary>
+              <div class="faq-content">
+                Минимальный срок бронирования — 2 ночи. Для групп и длительного проживания доступны специальные условия.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Есть ли парковка на территории?</summary>
+              <div class="faq-content">Да, у нас есть закрытая парковка прямо на территории дома. Парковка для гостей бесплатная.</div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Можно ли привести домашних животных?</summary>
+              <div class="faq-content">К сожалению, в доме не разрешены домашние животные для сохранения комфорта всех гостей.</div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Какие услуги включены в стоимость?</summary>
+              <div class="faq-content">
+                В стоимость включены: проживание, доступ к Wi-Fi, кондиционер, постельное белье и полотенца. Завтрак оплачивается отдельно.
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Как можно забронировать номер?</summary>
+              <div class="faq-content">
+                Вы можете забронировать номер через форму выше, позвонить нам в Telegram/WhatsApp или написать на почту. Мы подтвердим вашу
+                бронь в течение часа.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-simple">
+      <div class="container text-center">
+        <p class="muted">© <span data-year>2026</span> • Ливадия, Ялта</p>
+      </div>
+    </footer>
+
+    <div id="fs-overlay" class="fs-overlay">
+      <span class="fs-close">&times;</span>
+      <button class="fs-nav fs-prev" id="fs-prev">‹</button>
+      <img class="fs-img" id="fs-img" />
+      <button class="fs-nav fs-next" id="fs-next">›</button>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
