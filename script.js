@@ -1,299 +1,215 @@
 import { sendTelegramMessage } from './api/telegram.js';
 
 // ==========================================
-// ПАНЕЛЬ УПРАВЛЕНИЯ КАЛЕНДАРЕМ 
+// 1. КОНФИГ БРОНИРОВАНИЯ
 // ==========================================
 const MY_BOOKINGS = {
-    // Базовая цена за сутки
-    defaultPrice: "3500₽", 
-    
-    // МЕСЯЦЫ, КОГДА ТЫ СДАЕШЬ (5 - Май, 6 - Июнь и т.д.)
-    availableMonths: [5, 6, 7, 8, 9, 10],
-
-    // Цены по месяцам
-    monthlyPrices: {
-        5: "3500₽", 6: "4000₽", 7: "4500₽", 8: "5000₽", 9: "3500₽", 10: "3000₽"
-    },
-
-    // Праздники или особые цены на конкретные дни
-    specialPrices: {
-        "2026-05-01": "5000₽",
-        "2026-05-09": "5000₽",
-        "2026-06-12": "4500₽"
-    },
-    
-    // 1. НОВЫЙ РАЗДЕЛ: ЗАНЯТЫЕ МЕСЯЦЫ ПОЛНОСТЬЮ
-    bookedFullMonths: [7, 8], 
-
-    // 2. ЗАНЯТЫЕ ОТДЕЛЬНЫЕ ДАТЫ
-    bookedDates: [
-        "2026-05-10", "2026-05-11", "2026-06-15"
-    ]
+	defaultPrice: "3500₽", 
+	availableMonths: [5, 6, 7, 8, 9, 10],
+	monthlyPrices: { 5: "3500₽", 6: "4000₽", 7: "4500₽", 8: "5000₽", 9: "3500₽", 10: "3000₽" },
+	specialPrices: { "2026-05-01": "5000₽", "2026-05-09": "5000₽", "2026-06-12": "4500₽" },
+	bookedFullMonths: [7, 8], 
+	bookedDates: ["2026-05-10", "2026-05-11", "2026-06-15"]
 };
-// ==========================================
 
 // ==========================================
-// ОТПРАВКА ЗАЯВКИ
+// 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 // ==========================================
 
-// Обработчик формы бронирования
-function setupBookingForm() {
-    const form = document.getElementById('booking-form');
-    if (!form) return;
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Отправляю...';
-
-        const formData = {
-            name: form.querySelector('[name="name"]')?.value?.trim() || '',
-            guests: form.querySelector('[name="guests"]')?.value || '1',
-            phone: form.querySelector('[name="phone"]')?.value?.trim() || '',
-            checkIn: form.querySelector('[name="date_start"]')?.value || '',
-            checkOut: form.querySelector('[name="date_end"]')?.value || '',
-            message: form.querySelector('[name="wishes"]')?.value?.trim() || ''
-        };
-
-        console.log('📤 Отправляемые данные в Telegram:', formData);
-
-        if (!formData.name || !formData.phone) {
-            alert('Пожалуйста, заполните имя и телефон');
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-            return;
-        }
-
-        // Вызываем импортированную функцию из telegram.js
-        const result = await sendTelegramMessage(formData);
-        alert(result.message);
-
-        if (result.success) {
-            form.reset();
-        }
-
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    });
+// Загрузчик WebP с переходом на JPG
+function setImgSrc(imgElement, path) {
+	if (!imgElement || !path) return;
+	const cleanPath = path.replace(/\.(webp|jpg|jpeg|png)$/i, '');
+	imgElement.src = `${cleanPath}.webp`;
+	imgElement.onerror = () => {
+		if (imgElement.src.endsWith('.webp')) {
+			imgElement.src = `${cleanPath}.jpg`;
+			imgElement.onerror = null;
+		}
+	};
 }
 
 // ==========================================
-
+// 3. ОСНОВНАЯ ЛОГИКА (Запуск после загрузки DOM)
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    setupBookingForm();
+	
+	// --- ФОРМА БРОНИРОВАНИЯ ---
+	const bookingForm = document.getElementById('booking-form');
+	if (bookingForm) {
+		bookingForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const submitBtn = bookingForm.querySelector('button[type="submit"]');
+			const originalText = submitBtn.textContent;
+			
+			const formData = {
+				name: bookingForm.querySelector('[name="name"]')?.value?.trim() || '',
+				phone: bookingForm.querySelector('[name="phone"]')?.value?.trim() || '',
+				guests: bookingForm.querySelector('[name="guests"]')?.value || '1',
+				checkIn: bookingForm.querySelector('[name="date_start"]')?.value || '',
+				checkOut: bookingForm.querySelector('[name="date_end"]')?.value || '',
+				message: bookingForm.querySelector('[name="wishes"]')?.value?.trim() || ''
+			};
 
-    // === SMART STICKY HEADER LOGIC ===
-    const header = document.querySelector('.header');
-    if (header) {
-        let scrollPauseTimeout;
-        const HIDE_DELAY = 1500; // 1.5 секунды до исчезновения
+			if (!formData.name || !formData.phone) {
+				alert('Пожалуйста, заполните имя и телефон');
+				return;
+			}
 
-        window.addEventListener('scroll', () => {
-            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            
-            // 1. При ЛЮБОМ движении скролла сразу показываем меню
-            header.classList.remove('header--hidden');
-            
-            // 2. Сбрасываем предыдущий таймер
-            clearTimeout(scrollPauseTimeout);
-            
-            // 3. Запускаем таймер заново. Если скролл не трогают 1.5 сек - прячем
-            if (scrollTop > 50) { // Не прячем, если мы в самом начале страницы
-                scrollPauseTimeout = setTimeout(() => {
-                    header.classList.add('header--hidden');
-                }, HIDE_DELAY);
-            }
-        });
-    }
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'Отправляю...';
+			
+			const result = await sendTelegramMessage(formData);
+			alert(result.message);
+			if (result.success) bookingForm.reset();
+			
+			submitBtn.disabled = false;
+			submitBtn.textContent = originalText;
+		});
+	}
 
-    // === ЛОГИКА КАЛЕНДАРЯ ===
-    const calDaysContainer = document.getElementById('calendar-days');
-    const monthYearDisplay = document.getElementById('cal-month-year');
-    const prevBtn = document.getElementById('cal-prev');
-    const nextBtn = document.getElementById('cal-next');
+	// --- ШАПКА (STICKY HEADER) ---
+	const header = document.querySelector('.header');
+	if (header) {
+		let scrollPauseTimeout;
+		window.addEventListener('scroll', () => {
+			header.classList.remove('header--hidden');
+			clearTimeout(scrollPauseTimeout);
+			if (window.pageYOffset > 50) {
+				scrollPauseTimeout = setTimeout(() => {
+					header.classList.add('header--hidden');
+				}, 1500);
+			}
+		});
+	}
 
-    if (calDaysContainer) {
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth() + 1; // 1-12
-        let currentYear = currentDate.getFullYear();
+	// --- КАЛЕНДАРЬ ---
+	const calDaysContainer = document.getElementById('calendar-days');
+	if (calDaysContainer) {
+		const monthYearDisplay = document.getElementById('cal-month-year');
+		const prevBtn = document.getElementById('cal-prev');
+		const nextBtn = document.getElementById('cal-next');
+		const monthNames = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+		
+		let curDate = new Date();
+		let curMonth = MY_BOOKINGS.availableMonths.includes(curDate.getMonth() + 1) ? curDate.getMonth() + 1 : MY_BOOKINGS.availableMonths[0];
+		let curYear = curDate.getFullYear();
 
-        if (!MY_BOOKINGS.availableMonths.includes(currentMonth)) {
-            currentMonth = MY_BOOKINGS.availableMonths[0];
-        }
+		function renderCalendar(m, y) {
+			calDaysContainer.innerHTML = "";
+			monthYearDisplay.textContent = `${monthNames[m]} ${y}`;
+			let firstDay = new Date(y, m - 1, 1).getDay();
+			firstDay = firstDay === 0 ? 6 : firstDay - 1;
+			const daysInMonth = new Date(y, m, 0).getDate();
 
-        const monthNames = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+			for (let i = 0; i < firstDay; i++) {
+				const empty = document.createElement('div');
+				empty.className = 'cal-day empty';
+				calDaysContainer.appendChild(empty);
+			}
 
-        function renderCalendar(month, year) {
-            calDaysContainer.innerHTML = "";
-            monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+			for (let i = 1; i <= daysInMonth; i++) {
+				const dayDiv = document.createElement('div');
+				dayDiv.className = 'cal-day';
+				const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+				const isBooked = (MY_BOOKINGS.bookedFullMonths?.includes(m)) || (MY_BOOKINGS.bookedDates.includes(dateStr));
+				const price = MY_BOOKINGS.specialPrices[dateStr] || MY_BOOKINGS.monthlyPrices[m] || MY_BOOKINGS.defaultPrice;
 
-            let firstDay = new Date(year, month - 1, 1).getDay();
-            firstDay = firstDay === 0 ? 6 : firstDay - 1; 
+				dayDiv.classList.add(isBooked ? 'booked' : 'free');
+				dayDiv.innerHTML = `<span>${i}</span><span class="price">${isBooked ? '' : price}</span>`;
+				calDaysContainer.appendChild(dayDiv);
+			}
+		}
 
-            const daysInMonth = new Date(year, month, 0).getDate();
+		prevBtn.onclick = () => {
+			curMonth--; if(curMonth < 1) { curMonth = 12; curYear--; }
+			if(MY_BOOKINGS.availableMonths.includes(curMonth)) renderCalendar(curMonth, curYear);
+		};
+		nextBtn.onclick = () => {
+			curMonth++; if(curMonth > 12) { curMonth = 1; curYear++; }
+			if(MY_BOOKINGS.availableMonths.includes(curMonth)) renderCalendar(curMonth, curYear);
+		};
+		renderCalendar(curMonth, curYear);
+	}
 
-            for (let i = 0; i < firstDay; i++) {
-                const emptyDiv = document.createElement('div');
-                emptyDiv.classList.add('cal-day', 'empty');
-                calDaysContainer.appendChild(emptyDiv);
-            }
+	// --- ГАЛЕРЕЯ И СВАЙПЫ ---
+	const carousels = document.querySelectorAll('[data-carousel]');
+	const fsOverlay = document.getElementById('fs-overlay');
+	const fsImg = document.getElementById('fs-img');
+	let activeImages = [], activeIndex = 0, activeCarouselNode = null;
 
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayDiv = document.createElement('div');
-                dayDiv.classList.add('cal-day');
-                
-                const dateString = `${year}-${String(month).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const isMonthBooked = MY_BOOKINGS.bookedFullMonths && MY_BOOKINGS.bookedFullMonths.includes(month);
-                const isDayBooked = MY_BOOKINGS.bookedDates.includes(dateString);
-                const isBooked = isMonthBooked || isDayBooked;
+	carousels.forEach(carousel => {
+		const type = carousel.dataset.carousel;
+		const mainImg = carousel.querySelector('[data-main-img]');
+		const thumbContainer = carousel.querySelector('[data-thumbs]');
+		const countEl = carousel.querySelector('[data-count]');
+		let localImages = [], localIndex = 0;
 
-                const price = MY_BOOKINGS.specialPrices[dateString] || MY_BOOKINGS.monthlyPrices[month] || MY_BOOKINGS.defaultPrice;
+		if (type === 'home') {
+			localImages = Array.from({ length: 13 }, (_, i) => `photo/${String(i + 1).padStart(2, "0")}`);
+			if (thumbContainer) {
+				thumbContainer.innerHTML = '';
+				localImages.forEach((path, idx) => {
+					const img = document.createElement('img');
+					setImgSrc(img, path);
+					img.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
+					img.onclick = () => update(idx);
+					thumbContainer.appendChild(img);
+				});
+			}
+		} else {
+			localImages = Array.from(carousel.querySelectorAll('.thumb-img')).map(img => img.getAttribute('src').replace(/\.(webp|jpg|jpeg|png)$/i, ''));
+			carousel.querySelectorAll('.thumb-img').forEach((t, i) => { t.onclick = () => update(i); });
+		}
 
-                if (isBooked) {
-                    dayDiv.classList.add('booked');
-                    // Добавляем пустой span для цены, чтобы высота ячейки не менялась
-                    dayDiv.innerHTML = `<span>${i}</span><span class="price"></span>`;
-                } else {
-                    dayDiv.classList.add('free');
-                    dayDiv.innerHTML = `<span>${i}</span><span class="price">${price}</span>`;
-                }
-                calDaysContainer.appendChild(dayDiv);
-            }
-        }
+		function update(idx) {
+			localIndex = (idx + localImages.length) % localImages.length;
+			if (mainImg) setImgSrc(mainImg, localImages[localIndex]);
+			if (countEl) countEl.textContent = `${localIndex + 1} / ${localImages.length}`;
+			carousel.querySelectorAll('.thumb-img').forEach((t, i) => {
+				t.classList.toggle('active', i === localIndex);
+				if (i === localIndex) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+			});
+		}
 
-        renderCalendar(currentMonth, currentYear);
+		carousel.querySelector('[data-prev]')?.addEventListener('click', () => update(localIndex - 1));
+		carousel.querySelector('[data-next]')?.addEventListener('click', () => update(localIndex + 1));
 
-        prevBtn.addEventListener('click', () => {
-            let targetMonth = currentMonth - 1;
-            let targetYear = currentYear;
-            if (targetMonth < 1) { targetMonth = 12; targetYear--; }
-            
-            if (MY_BOOKINGS.availableMonths.includes(targetMonth)) {
-                currentMonth = targetMonth;
-                currentYear = targetYear;
-                renderCalendar(currentMonth, currentYear);
-            }
-        });
+		// Свайп
+		let tsX = 0;
+		carousel.addEventListener('touchstart', e => { tsX = e.changedTouches[0].screenX; }, {passive: true});
+		carousel.addEventListener('touchend', e => {
+			let dx = tsX - e.changedTouches[0].screenX;
+			if (Math.abs(dx) > 50) update(dx > 0 ? localIndex + 1 : localIndex - 1);
+		}, {passive: true});
 
-        nextBtn.addEventListener('click', () => {
-            let targetMonth = currentMonth + 1;
-            let targetYear = currentYear;
-            if (targetMonth > 12) { targetMonth = 1; targetYear++; }
-            
-            if (MY_BOOKINGS.availableMonths.includes(targetMonth)) {
-                currentMonth = targetMonth;
-                currentYear = targetYear;
-                renderCalendar(currentMonth, currentYear);
-            }
-        });
-    }
+		carousel.querySelector('[data-zoom-trigger]')?.addEventListener('click', () => {
+			activeImages = localImages; activeIndex = localIndex; activeCarouselNode = carousel;
+			setImgSrc(fsImg, activeImages[activeIndex]);
+			fsOverlay.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		});
+	});
 
-    // === ЛОГИКА ГАЛЕРЕИ ===
-    const carousels = document.querySelectorAll('[data-carousel]');
-    const fsOverlay = document.getElementById('fs-overlay');
-    const fsImg = document.getElementById('fs-img');
-    const fsPrev = document.getElementById('fs-prev');
-    const fsNext = document.getElementById('fs-next');
-    
-    let activeImages = [];
-    let activeIndex = 0;
+	// --- FULLSCREEN УПРАВЛЕНИЕ ---
+	document.getElementById('fs-prev')?.addEventListener('click', (e) => {
+		e.stopPropagation();
+		activeIndex = (activeIndex - 1 + activeImages.length) % activeImages.length;
+		setImgSrc(fsImg, activeImages[activeIndex]);
+		if (activeCarouselNode) activeCarouselNode.querySelectorAll('.thumb-img')[activeIndex]?.click();
+	});
+	document.getElementById('fs-next')?.addEventListener('click', (e) => {
+		e.stopPropagation();
+		activeIndex = (activeIndex + 1) % activeImages.length;
+		setImgSrc(fsImg, activeImages[activeIndex]);
+		if (activeCarouselNode) activeCarouselNode.querySelectorAll('.thumb-img')[activeIndex]?.click();
+	});
 
-    carousels.forEach(carousel => {
-        const type = carousel.dataset.carousel;
-        const mainImg = carousel.querySelector('[data-main-img]');
-        const thumbContainer = carousel.querySelector('[data-thumbs]');
-        const countEl = carousel.querySelector('[data-count]');
-        
-        let localImages = [];
-        let localIndex = 0;
+	const closeFs = () => { fsOverlay.style.display = 'none'; document.body.style.overflow = 'auto'; };
+	document.querySelector('.fs-close')?.addEventListener('click', closeFs);
+	fsOverlay?.addEventListener('click', (e) => { if(e.target === fsOverlay) closeFs(); });
 
-        if (type === 'home') {
-            localImages = Array.from({ length: 20 }, (_, i) => `photo/${String(i + 1).padStart(2, "0")}.jpg`);
-            if(thumbContainer) {
-                thumbContainer.innerHTML = '';
-                localImages.forEach((src, idx) => {
-                    const img = document.createElement('img');
-                    img.src = src;
-                    img.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
-                    img.onclick = () => update(idx);
-                    thumbContainer.appendChild(img);
-                });
-            }
-        } else {
-            localImages = Array.from(carousel.querySelectorAll('.thumb-img')).map(img => img.src);
-            carousel.querySelectorAll('.thumb-img').forEach((t, i) => {
-                t.onclick = () => update(i);
-            });
-        }
-
-        function update(idx) {
-            localIndex = (idx + localImages.length) % localImages.length;
-            if(mainImg) mainImg.src = localImages[localIndex];
-            if (countEl) countEl.textContent = `${localIndex + 1} / ${localImages.length}`;
-            
-            carousel.querySelectorAll('.thumb-img').forEach((t, i) => {
-                t.classList.toggle('active', i === localIndex);
-                if (i === localIndex) t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            });
-            
-            if (fsOverlay && fsOverlay.style.display === 'flex') {
-                fsImg.src = localImages[localIndex];
-                activeIndex = localIndex;
-            }
-        }
-
-        const pBtn = carousel.querySelector('[data-prev]');
-        const nBtn = carousel.querySelector('[data-next]');
-        if(pBtn) pBtn.onclick = () => update(localIndex - 1);
-        if(nBtn) nBtn.onclick = () => update(localIndex + 1);
-
-        const zoomTrigger = carousel.querySelector('[data-zoom-trigger]');
-        if (zoomTrigger) {
-            zoomTrigger.onclick = () => {
-                activeImages = localImages;
-                activeIndex = localIndex;
-                if(fsImg) fsImg.src = activeImages[activeIndex];
-                if(fsOverlay) fsOverlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            };
-        }
-    });
-
-    if(fsPrev && fsNext) {
-        fsPrev.onclick = (e) => {
-            e.stopPropagation();
-            activeIndex = (activeIndex - 1 + activeImages.length) % activeImages.length;
-            fsImg.src = activeImages[activeIndex];
-            syncMain(activeIndex);
-        };
-        fsNext.onclick = (e) => {
-            e.stopPropagation();
-            activeIndex = (activeIndex + 1) % activeImages.length;
-            fsImg.src = activeImages[activeIndex];
-            syncMain(activeIndex);
-        };
-    }
-
-    function syncMain(idx) {
-        const activeCarousel = Array.from(carousels).find(c => Array.from(c.querySelectorAll('.thumb-img')).some(t => t.src === activeImages[idx]));
-        if (activeCarousel) {
-            const thumbs = activeCarousel.querySelectorAll('.thumb-img');
-            if(thumbs[idx]) thumbs[idx].click();
-        }
-    }
-
-    const fsClose = document.querySelector('.fs-close');
-    if (fsClose) {
-        fsClose.onclick = () => {
-            fsOverlay.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        };
-        fsOverlay.onclick = (e) => { if(e.target === fsOverlay) fsClose.onclick(); };
-    }
-
-    const yearSpan = document.querySelector('[data-year]');
-    if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+	// Текущий год
+	const yearSpan = document.querySelector('[data-year]');
+	if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 });

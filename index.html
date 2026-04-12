@@ -15,19 +15,22 @@
   <body>
     <header class="header">
       <div class="container header__inner">
-        <a href="./index.html" class="brand">
-          <span class="brand__logo">Л</span>
-          <div class="brand__text">
-            <span class="brand__title">Гостевой дом</span>
-            <span class="brand__sub">Ливадия • Ялта</span>
-          </div>
-        </a>
+        <nav class="nav">
+          <a href="./index.html" class="brand">
+            <span class="brand__logo">Л</span>
+            <div class="brand__text">
+              <span class="brand__title">Гостевой дом</span>
+              <span class="brand__sub">Ливадия • Ялта</span>
+              <a href="https://livadiyadom.com" class="nav__link--alt" target="_blank" rel="noopener noreferrer">Квартира</a>
+            </div>
+          </a>
+        </nav>
         <nav class="nav">
           <div class="nav__links">
             <a href="#about">О доме</a>
             <a href="#gallery">Галерея</a>
             <a href="#location">Бронь</a>
-            <a href="#faq">FAQ</a>
+            <a href="#faq">Условия</a>
             <a href="./livadia.html" class="nav__link--alt">Ливадия</a>
           </div>
         </nav>
@@ -56,11 +59,15 @@
             <div class="atmosphere-text">
               <h2 style="text-align: center; color: #3b3b3c">Атмосфера дома</h2>
               <ul class="check-list">
-                <li><b>Светлые интерьеры</b> и натуральное дерево.</li>
-                <li><b>Тихий район</b> — только пение птиц.</li>
-                <li><b>Все удобства</b> — Wi-Fi, белье, комфорт.</li>
-                <li><b>Рядом достопримечательности</b> — Ливадийский дворец.</li>
                 <li><b>Идеально для семьи</b> — 2 отдельные спальни.</li>
+                <li>
+                  <b>Уют и простор</b> — Дом полностью укомплектован: кондиционер, Android TV, Wi-Fi, микроволновка,стиральная машина, вся
+                  посуда, белье, утюг и фен.
+                </li>
+                <li><b>Отдых на свежем воздухе</b> — беседка, навес для мангала и шезлонги.</li>
+                <li><b>Тихий район</b> — только пение птиц.</li>
+                <li><b>Рядом достопримечательности</b> — Ливадийский дворец.</li>
+                <li><b>Прогулки у моря</b> — 20 минут вдоль побережья до набережной Ялты.</li>
               </ul>
             </div>
             <div class="features-grid">
@@ -108,12 +115,12 @@
       </section>
 
       <section class="section" id="location">
-        <div class="container">
+        <div class="container" id="contacts">
           <h2 class="section-title" style="text-align: center; margin-bottom: 40px">Контакты и Бронь</h2>
 
           <div class="contacts-booking-wrapper">
             <div class="left-column-contact">
-              <div class="contacts-section" id="contacts">
+              <div class="contacts-section">
                 <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Контакты</h3>
                 <div class="contact-box" style="padding: 0">
                   <strong>Адрес:</strong>
@@ -245,6 +252,22 @@
                 бронь в течение часа.
               </div>
             </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Далеко ли до Ливадийского дворца?</summary>
+              <div class="faq-content">
+                Квартира находится в непосредственной близости от Ливадийского дворца, его тенистых аллей и знаменитой «Солнечной тропы».
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary class="faq-summary">Далеко ли до Ливадийского пляжа?</summary>
+              <div class="faq-content">
+                Квартира находится в непосредственной близости от Ливадийского пляжа. Ливадийская набережная сейчас на реконструкции — мы за
+                обновление и комфорт! А пока наши гости с удовольствием посещают соседние чистые пляжи (например, "Дельфин"), до которых
+                можно прогуляться по парку или быстро доехать на электрокаре.
+              </div>
+            </details>
           </div>
         </div>
       </section>
@@ -262,7 +285,5 @@
       <img class="fs-img" id="fs-img" />
       <button class="fs-nav fs-next" id="fs-next">›</button>
     </div>
-
-    <script src="./script.js"></script>
   </body>
 </html>

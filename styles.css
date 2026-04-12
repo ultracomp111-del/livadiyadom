@@ -363,11 +363,12 @@ content: '';
 }
 
 /* Carousel */
-.carousel { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.carousel { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);overscroll-behavior-x: contain; /* Блокирует переход «назад/вперед» в браузере */
+    touch-action: pan-y; }
 .carousel__viewport { position: relative; aspect-ratio: 16/9; background: #000; }
 .carousel__main-click-area { width: 100%; height: 100%; cursor: zoom-in; }
 .carousel__main-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; }
-.carousel__btn { position: absolute; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); cursor: pointer; z-index: 5; font-size: 24px; color: #000; }
+.carousel__btn { animation: pulse 2s infinite; position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.9); cursor: pointer; z-index: 5; font-size: 24px; color: #000; }
 .carousel__btn.prev { left: 10px; }
 .carousel__btn.next { right: 10px; }
 .thumbs-scroller { display: flex; gap: 8px; padding: 12px; overflow-x: auto; scrollbar-width: none; }
@@ -758,3 +759,91 @@ section[id] {
     margin-left: 0 !important;
     padding-left: 0 !important;
 }
+
+@keyframes pulse {
+    0% { 
+        transform: translateY(-50%) scale(1); 
+        opacity: 0.7; 
+    }
+    50% { 
+        transform: translateY(-50%) scale(1.1); /* 1.2 может быть слишком много для текста */
+        opacity: 0.4; 
+    }
+    100% { 
+        transform: translateY(-50%) scale(1); 
+        opacity: 0.7; 
+    }
+}
+
+@media (max-width: 1030px) {
+    .carousel__btn {
+        /* 1. Прячем всё старое (текст или иконки внутри кнопки) */
+        font-size: 0 !important;
+        color: transparent !important;
+        
+        /* 2. Настраиваем контейнер */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center;
+        justify-content: center;
+        
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        
+        width: 80px;
+        background: none !important;
+        border: none !important;
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    /* 3. Верхняя надпись SWIPE */
+    .carousel__btn::before {
+        content: 'SWIPE';
+        display: block;
+        font-size: 20px; /* Возвращаем размер шрифта только для текста */
+        font-family: sans-serif;
+        font-weight: bold;
+        letter-spacing: 1.5px;
+        color: #ffffff; /* Цвет текста */
+        margin-bottom: 2px;
+        visibility:visible;
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6)
+    }
+
+    /* 4. Нижние двойные стрелки */
+    .carousel__btn::after {
+        display: block;
+        font-size: 60px; /* Размер стрелок */
+        font-family: serif;
+        font-weight: bold;
+        color: #ffffff;
+        visibility: visible;
+        line-height: 1;
+		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6)
+    }
+
+    /* Направление стрелок для каждой кнопки */
+    .carousel__btn.prev::after {
+        content: '«'; /* Красивые двойные кавычки-стрелки */
+    }
+
+    .carousel__btn.next::after {
+        content: '»';
+    }
+
+    /* Позиционирование на экране */
+    .carousel__btn.prev { left: 0px; }
+    .carousel__btn.next { right: 0px; }
+}
+
+@media (max-width: 550px) {
+	.carousel__btn::before{
+		font-size: 10px;
+	}
+	.carousel__btn::after{
+		font-size: 30px;
+	}
+};
