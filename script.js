@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		let localImages = [], localIndex = 0;
 
 		if (type === 'home') {
-			localImages = Array.from({ length: 13 }, (_, i) => `photo/${String(i + 1).padStart(2, "0")}`);
+			localImages = Array.from({ length: 20 }, (_, i) => `photo/${String(i + 1).padStart(2, "0")}`);
 			if (thumbContainer) {
 				thumbContainer.innerHTML = '';
 				localImages.forEach((path, idx) => {
