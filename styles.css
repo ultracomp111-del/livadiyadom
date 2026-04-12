@@ -627,7 +627,7 @@ content: '';
 }
 
 @media (max-width: 450px) {
-    .nav__links { gap: 20px; }
+    .nav__links { gap: 15px; }
     .nav a { font-size: 16px; }
     .cal-day { font-size: 14px; }
     .cal-day.free .price { font-size: 10px; }
