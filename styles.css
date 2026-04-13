@@ -627,7 +627,7 @@ content: '';
 }
 
 @media (max-width: 450px) {
-    .nav__links { gap: 15px; }
+    .nav__links { gap: 14px; }
     .nav a { font-size: 16px; }
     .cal-day { font-size: 14px; }
     .cal-day.free .price { font-size: 10px; }
@@ -803,26 +803,30 @@ section[id] {
     .carousel__btn::before {
         content: 'SWIPE';
         display: block;
-        font-size: 20px; /* Возвращаем размер шрифта только для текста */
+        font-size: 25px; /* Возвращаем размер шрифта только для текста */
         font-family: sans-serif;
         font-weight: bold;
         letter-spacing: 1.5px;
         color: #ffffff; /* Цвет текста */
         margin-bottom: 2px;
         visibility:visible;
-		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6)
+		text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8),  /* Темный ореол вокруг */
+            0px 0px 10px rgba(0, 0, 0, 0.6), /* Широкое размытие */
+            2px 2px 4px rgba(0, 0, 0, 0.8);  /* Классическая тень вниз-вправо */
     }
 
     /* 4. Нижние двойные стрелки */
     .carousel__btn::after {
         display: block;
-        font-size: 60px; /* Размер стрелок */
+        font-size: 65px; /* Размер стрелок */
         font-family: serif;
         font-weight: bold;
         color: #ffffff;
         visibility: visible;
         line-height: 1;
-		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6)
+		text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8),  /* Темный ореол вокруг */
+            0px 0px 10px rgba(0, 0, 0, 0.6), /* Широкое размытие */
+            2px 2px 4px rgba(0, 0, 0, 0.8);  /* Классическая тень вниз-вправо */
     }
 
     /* Направление стрелок для каждой кнопки */
@@ -835,15 +839,17 @@ section[id] {
     }
 
     /* Позиционирование на экране */
-    .carousel__btn.prev { left: 0px; }
-    .carousel__btn.next { right: 0px; }
+    .carousel__btn.prev { left: 15px; }
+    .carousel__btn.next { right: 15px; }
 }
 
 @media (max-width: 550px) {
 	.carousel__btn::before{
-		font-size: 10px;
+		font-size: 20px;
 	}
 	.carousel__btn::after{
-		font-size: 30px;
+		font-size: 35px;
 	}
+	.carousel__btn.prev { left: 0px; }
+    .carousel__btn.next { right: 0px; }
 }
