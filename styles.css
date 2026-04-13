@@ -627,8 +627,20 @@ content: '';
 }
 
 @media (max-width: 450px) {
-    .nav__links { gap: 14px; }
+    .nav__links { gap: 16px; }
     .nav a { font-size: 16px; }
+    .cal-day { font-size: 14px; }
+    .cal-day.free .price { font-size: 10px; }
+}
+@media (max-width: 370px) {
+    .nav__links { gap: 10px; }
+    .nav a { font-size: 16px; }
+    .cal-day { font-size: 14px; }
+    .cal-day.free .price { font-size: 10px; }
+}
+@media (max-width: 356px) {
+    .nav__links { gap: 9px; }
+    .nav a { font-size: 14px; }
     .cal-day { font-size: 14px; }
     .cal-day.free .price { font-size: 10px; }
 }
