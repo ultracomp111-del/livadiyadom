@@ -581,8 +581,15 @@ section[id] { scroll-margin-top: 80px; }
         grid-template-columns: 1fr; /* Стакаем в один столбец */
         gap: 10px;
 		width: 80%;
-		box-sizing: border-box;
+		margin: 10px auto;    /* Центрировать */
+    	overflow: hidden;  /* Обрезать всё, что вылезет (на всякий случай) */
+		
     }
+	.calendar-weekdays {
+  	display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 равных колонок */
+    width: 100%;
+	}
     .calendar-card-wrapper {
         order: -1; /* На мобильном календарь ставим ВЫШЕ формы для удобства */
     }
@@ -596,8 +603,14 @@ section[id] { scroll-margin-top: 80px; }
         grid-template-columns: 1fr; /* Стакаем в один столбец */
         gap: 10px;
 		width: 90%;
-		box-sizing: border-box;
+		margin: 10px auto;    /* Центрировать */
+    	overflow: hidden;  /* Обрезать всё, что вылезет (на всякий случай) */
     }
+	.calendar-weekdays {
+  	display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 равных колонок */
+    width: 100%;
+	}
     .calendar-card-wrapper {
         order: -1; /* На мобильном календарь ставим ВЫШЕ формы для удобства */
     }
