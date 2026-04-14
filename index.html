@@ -6,7 +6,6 @@
     <title>Гостевой дом в Ливадии</title>
 
     <script type="module" src="./script.js"></script>
-
     <link rel="stylesheet" href="./styles.css" />
 
     <link rel="shortcut icon" href="./icons/favicon.ico" type="image/x-icon" />
@@ -40,13 +39,11 @@
         <div class="container hero-main__container">
           <div class="hero-main__content">
             <h1 class="hero__title">Ваш тихий уголок в Ливадии</h1>
-            <p class="hero__subtitle">
-              Уютный дом в паре шагов от Ливадийского дворца и Царской тропы. Идеальное место для восстановления сил.
-            </p>
+            <p class="hero__subtitle">Уютный дом в паре шагов от Ливадийского дворца и Царской тропы. Идеальное место для восстановления сил.</p>
             <a href="#contacts" class="btn-main">Забронировать отдых</a>
           </div>
           <div class="hero-main__image-wrap">
-            <img src="photo/03.jpg" alt="Наш гостевой дом" class="main-hero-img" />
+            <img src="photo/03.webp" alt="Наш гостевой дом" class="main-hero-img" />
           </div>
         </div>
       </section>
@@ -58,10 +55,7 @@
               <h2 style="text-align: center; color: #3b3b3c">Атмосфера дома</h2>
               <ul class="check-list">
                 <li><b>Идеально для семьи</b> — 2 отдельные спальни.</li>
-                <li>
-                  <b>Уют и простор</b> — Дом полностью укомплектован: кондиционер, Android TV, Wi-Fi, микроволновка,стиральная машина, вся
-                  посуда, белье, утюг и фен.
-                </li>
+                <li><b>Уют и простор</b> — Дом полностью укомплектован: кондиционер, Android TV, Wi-Fi, микроволновка,стиральная машина, вся посуда, белье, утюг и фен.</li>
                 <li><b>Отдых на свежем воздухе</b> — беседка, навес для мангала и шезлонги.</li>
                 <li><b>Тихий район</b> — только пение птиц.</li>
                 <li><b>Рядом достопримечательности</b> — Ливадийский дворец.</li>
@@ -94,14 +88,30 @@
         <div class="container">
           <div class="text-center" style="margin-bottom: 30px">
             <h2 class="section-title">Фотогалерея</h2>
-            <p class="muted">Нажмите на фото, чтобы увеличить и листать</p>
+
+            <p class="muted" style="display: flex; align-items: center; justify-content: center; gap: 8px">
+              Нажмите на фото, чтобы увеличить и листать
+
+              <lottie-player src="./icons/click.json" background="transparent" speed="1" style="width: 38px; height: 38px" loop autoplay></lottie-player>
+            </p>
           </div>
+
           <div class="carousel" data-carousel="home">
             <div class="carousel__viewport">
               <button class="carousel__btn prev" data-prev>‹</button>
-              <div class="carousel__main-click-area" data-zoom-trigger>
-                <img src="photo/01.jpg" class="carousel__main-img" data-main-img alt="Фото" />
+
+              <div class="carousel__main-click-area skeleton" data-zoom-trigger>
+                <img
+                  src="photo/01.webp"
+                  class="carousel__main-img"
+                  data-main-img
+                  alt="Фото"
+                  onload="
+                    this.classList.add('loaded');
+                    this.parentElement.classList.remove('skeleton');
+                  " />
               </div>
+
               <button class="carousel__btn next" data-next>›</button>
             </div>
             <div class="carousel__info"><span data-count>1 / 20</span></div>
@@ -116,64 +126,46 @@
         <div class="container" id="contacts">
           <h2 class="section-title" style="text-align: center; margin-bottom: 40px">Контакты и Бронь</h2>
 
-          <div class="contacts-booking-wrapper">
-            <div class="left-column-contact">
-              <div class="contacts-section">
-                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Контакты</h3>
-                <div class="contact-box" style="padding: 0">
-                  <strong>Адрес:</strong>
-                  <p>Ялта, Ливадия, ул. Батурина</p>
-                  <strong style="display: block; margin-top: 16px">Телефон (Telegram, WhatsApp):</strong>
-                  <a href="tel:+70000000000" class="contact-link">+7 (000) 000-00-00</a>
+          <div class="booking-grid-wrapper">
+            <div class="booking-card">
+              <h3 class="card-title">Оставить заявку</h3>
+              <form id="booking-form" class="booking-form-integrated">
+                <input type="text" name="name" placeholder="Ваше имя" required />
+                <input type="tel" name="phone" placeholder="Телефон" required />
+
+                <div class="form-row">
+                  <div class="input-group">
+                    <label style="font-size: 12px; color: var(--muted); margin-bottom: 4px; display: block">Заезд</label>
+                    <input type="date" id="check-in" name="date_start" required title="Дата заезда" />
+                  </div>
+                  <div class="input-group">
+                    <label style="font-size: 12px; color: var(--muted); margin-bottom: 4px; display: block">Выезд</label>
+                    <input type="date" id="check-out" name="date_end" required title="Дата выезда" />
+                  </div>
                 </div>
-              </div>
 
-              <div class="booking-section">
-                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Оставить заявку</h3>
-                <form id="booking-form" class="booking-form">
-                  <input type="text" name="name" placeholder="Ваше имя" required />
-                  <input
-                    type="number"
-                    name="guests"
-                    placeholder="Кол-во гостей"
-                    min="1"
-                    required
-                    title="Укажите количество гостей (взрослые + дети)" />
+                <select name="guests" class="guests-select">
+                  <option value="1">1 гость</option>
+                  <option value="2" selected>2 гостя</option>
+                  <option value="3">3 гостя</option>
+                  <option value="4">4 гостя (максимум)</option>
+                </select>
 
-                  <input type="tel" name="phone" placeholder="Телефон" required />
-                  <div class="desktop-only"></div>
+                <textarea name="wishes" placeholder="Дополнительные пожелания"></textarea>
 
-                  <input
-                    type="text"
-                    name="date_start"
-                    placeholder="Дата заезда"
-                    onfocus="this.type = 'date'"
-                    onblur="if (!this.value) this.type = 'text';"
-                    required
-                    title="Дата заезда" />
-                  <input
-                    type="text"
-                    name="date_end"
-                    placeholder="Дата выезда"
-                    onfocus="this.type = 'date'"
-                    onblur="if (!this.value) this.type = 'text';"
-                    required
-                    title="Дата выезда" />
+                <div id="price-display" class="price-display" style="display: none">Итоговая стоимость: <span id="total-price">0</span> ₽</div>
 
-                  <textarea name="wishes" class="full-width" placeholder="Дополнительные пожелания" rows="3"></textarea>
-
-                  <button type="submit" class="btn-main full-width">📥 Отправить заявку</button>
-                </form>
-              </div>
+                <button type="submit" class="btn-main" style="width: 100%; margin-top: auto">📥 Отправить заявку</button>
+              </form>
             </div>
 
-            <div class="right-column-calendar">
-              <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px">Свободные даты</h3>
-              <div class="calendar-card">
+            <div class="booking-card calendar-card-wrapper">
+              <h3 class="card-title">Свободные даты</h3>
+              <div class="calendar-widget">
                 <div class="calendar-header">
-                  <button id="cal-prev" class="cal-btn">‹</button>
-                  <div id="cal-month-year" class="cal-title">Май 2026</div>
-                  <button id="cal-next" class="cal-btn">›</button>
+                  <button id="cal-prev" class="cal-btn" type="button">‹</button>
+                  <div id="cal-month-year" class="cal-title"></div>
+                  <button id="cal-next" class="cal-btn" type="button">›</button>
                 </div>
                 <div class="calendar-weekdays">
                   <div>Пн</div>
@@ -186,28 +178,49 @@
                 </div>
                 <div id="calendar-days" class="calendar-days"></div>
                 <div class="calendar-legend">
-                  <span class="legend-item">
-                    <span class="legend-color legend-free"></span>
-                    Свободно
-                  </span>
-                  <span class="legend-item">
-                    <span class="legend-color legend-booked"></span>
-                    Занято
-                  </span>
+                  <span class="legend-item"><span class="legend-color legend-free"></span> Свободно</span>
+                  <span class="legend-item"><span class="legend-color legend-booked"></span> Занято</span>
+                  <span class="legend-item"><span class="legend-color legend-selected"></span> Выбрано</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div style="margin-top: 40px">
-            <h3 style="font-size: 16px; font-weight: 700; text-align: center; color: #3b3b3c; margin-bottom: 20px">Карта</h3>
-            <div class="map-wrapper">
-              <a
-                href="https://yandex.com/maps/?ll=34.147352%2C44.474560&mode=routes&rtext=~44.472434%2C34.143454&rtt=comparison&ruri=~&z=15.8"
-                target="_blank"
-                class="static-map">
-                <div class="static-map__label">Открыть на карте</div>
-              </a>
+          <div class="booking-grid-wrapper">
+            <div class="booking-card">
+              <h3 class="card-title">Контакты</h3>
+              <div class="contacts-content">
+                <p class="contact-label" style="font-size: medium">Контактное лицо:</p>
+                <p class="contact-text" style="color: var(--muted)">Анатолий</p>
+                <p class="contact-label" style="font-size: medium">Адрес:</p>
+                <p class="contact-text" style="color: var(--muted)">Ялта, пгт. Ливадия, ул. Батурина 26</p>
+
+                <div class="contact-socials">
+                  <p class="contact-label">Связь:</p>
+                  <a href="https://wa.me/79788431297" class="social-icon wa" target="_blank" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                      <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                  </a>
+
+                  <a href="https://t.me/ваш_логин" class="social-icon tg" target="_blank" aria-label="Telegram">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.26.26-.53.26l.202-3.04 5.514-4.98c.24-.213-.054-.33-.37-.12L8.91 14.16l-2.94-.92c-.64-.2-.65-.64.13-.95l11.5-4.43c.53-.19.99.12.794.961z" />
+                    </svg>
+                  </a>
+                </div>
+                <a href="tel:+70000000000" class="contact-link">+7 (000) 000-00-00</a>
+              </div>
+            </div>
+
+            <div class="booking-card map-card">
+              <h3 class="card-title">Мы на карте</h3>
+              <div class="map-wrapper" style="flex-grow: 1; display: flex; flex-direction: column; margin-top: 0">
+                <a href="https://yandex.com/maps/?ll=34.147352%2C44.474560&mode=routes&rtext=~44.472434%2C34.143454&rtt=comparison" target="_blank" class="static-map">
+                  <div class="static-map__label">Открыть на Картах</div>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -221,9 +234,7 @@
           <div class="faq-list">
             <details class="faq-item">
               <summary class="faq-summary">Какой минимальный срок бронирования?</summary>
-              <div class="faq-content">
-                Минимальный срок бронирования — 2 ночи. Для групп и длительного проживания доступны специальные условия.
-              </div>
+              <div class="faq-content">Минимальный срок бронирования — 2 ночи. Для групп и длительного проживания доступны специальные условия.</div>
             </details>
 
             <details class="faq-item">
@@ -238,32 +249,23 @@
 
             <details class="faq-item">
               <summary class="faq-summary">Какие услуги включены в стоимость?</summary>
-              <div class="faq-content">
-                В стоимость включены: проживание, доступ к Wi-Fi, кондиционер, постельное белье и полотенца. Завтрак оплачивается отдельно.
-              </div>
+              <div class="faq-content">В стоимость включены: проживание, доступ к Wi-Fi, кондиционер, постельное белье и полотенца. Завтрак оплачивается отдельно.</div>
             </details>
 
             <details class="faq-item">
               <summary class="faq-summary">Как можно забронировать номер?</summary>
-              <div class="faq-content">
-                Вы можете забронировать номер через форму выше, позвонить нам в Telegram/WhatsApp или написать на почту. Мы подтвердим вашу
-                бронь в течение часа.
-              </div>
+              <div class="faq-content">Вы можете забронировать номер через форму выше, позвонить нам в Telegram/WhatsApp или написать на почту. Мы подтвердим вашу бронь в течение часа.</div>
             </details>
 
             <details class="faq-item">
               <summary class="faq-summary">Далеко ли до Ливадийского дворца?</summary>
-              <div class="faq-content">
-                Квартира находится в непосредственной близости от Ливадийского дворца, его тенистых аллей и знаменитой «Солнечной тропы».
-              </div>
+              <div class="faq-content">Квартира находится в непосредственной близости от Ливадийского дворца, его тенистых аллей и знаменитой «Солнечной тропы».</div>
             </details>
 
             <details class="faq-item">
               <summary class="faq-summary">Далеко ли до Ливадийского пляжа?</summary>
               <div class="faq-content">
-                Квартира находится в непосредственной близости от Ливадийского пляжа. Ливадийская набережная сейчас на реконструкции — мы за
-                обновление и комфорт! А пока наши гости с удовольствием посещают соседние чистые пляжи (например, "Дельфин"), до которых
-                можно прогуляться по парку или быстро доехать на электрокаре.
+                Квартира находится в непосредственной близости от Ливадийского пляжа. Ливадийская набережная сейчас на реконструкции — мы за обновление и комфорт! А пока наши гости с удовольствием посещают соседние чистые пляжи (например, "Дельфин"), до которых можно прогуляться по парку или быстро доехать на электрокаре.
               </div>
             </details>
           </div>
@@ -283,5 +285,6 @@
       <img class="fs-img" id="fs-img" />
       <button class="fs-nav fs-next" id="fs-next">›</button>
     </div>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </body>
 </html>

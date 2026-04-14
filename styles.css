@@ -40,13 +40,12 @@
 }
 
 /* ======================================= */
-/* БАЗОВЫЕ НАСТРОЙКИ (ФИКС "ПРЫГАЮЩЕЙ" ВЕРСТКИ) */
+/* БАЗОВЫЕ НАСТРОЙКИ */
 /* ======================================= */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { 
     scroll-behavior: smooth; 
-    overflow-y: scroll; /* Фикс скачков макета между страницами */
-    /* Убрали overflow-x: hidden, так как он ломает position: sticky */
+    overflow-y: scroll; 
 } 
 body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
@@ -54,7 +53,7 @@ body {
     color: var(--text); 
     line-height: 1.5; 
     width: 100%;
-    overflow-x: clip; /* clip обрезает по горизонтали, но позволяет меню прилипать! */
+    overflow-x: clip;
     transition: background-color 0.3s, color 0.3s; 
 }
 .container { width: min(1000px, 92%); margin-inline: auto; }
@@ -67,18 +66,11 @@ body {
     z-index: 100; 
     background: var(--surface); 
     border-bottom: 1px solid var(--line); 
-    /* Плавная анимация появления и исчезновения */
     transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s, opacity 0.4s ease-out; 
 }
 @supports (backdrop-filter: blur(20px)) { .header { background: rgba(var(--surface), 0.8); backdrop-filter: blur(20px); } }
 
-/* Класс для скрытия меню при паузе скролла */
-.header--hidden { 
-    transform: translateY(-100%); 
-    opacity: 0; 
-    pointer-events: none; 
-}
-
+.header--hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
 .header__inner { display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 8px; }
 .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit; }
 .brand__logo { background: #3b3b3c; color: #fefefe; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; font-weight: bold; font-size: 14px; flex-shrink: 0; }
@@ -109,233 +101,49 @@ body {
 
 /* Grid */
 .section { padding: 60px 0; scroll-margin-top: 100px; }
+.section--light { background: var(--surface-alt); border-radius: 30px; width: calc(100% - 32px); margin: 0 auto; }
 
-/* Фикс светлой секции: четкая ширина исключает выход за края на мобильном */
-.section--light { 
-    background: var(--surface-alt); 
-    border-radius: 30px; 
-    width: calc(100% - 32px); 
-    margin: 0 auto; 
-}
-
-/* новые стили описания и карточек */
-/* --- ОБЩИЙ КОНТЕЙНЕР ДЛЯ БЛОКА АТМОСФЕРА --- */
-.atmosphere-inner {
-    display: flex;
-    flex-direction: column; /* На мобилках всё в столбик */
-    gap: 30px;
-    align-items: flex-start;
-}
-
+/* Atmosphere */
+.atmosphere-inner { display: flex; flex-direction: column; gap: 30px; align-items: flex-start; }
 @media (min-width: 1025px) {
-    .atmosphere-inner {
-        flex-direction: row; /* На десктопе в ряд */
-        justify-content: space-between;
-        align-items: center; /* Центрируем по вертикали относительно текста */
-    }
-    
-    .atmosphere-text {
-        flex: 1; /* Текст занимает свободное место */
-        max-width: 500px;
-    }
-
-    .features-grid {
-        flex: 1;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr) !important; /* Строго 2 колонки на десктопе */
-        max-width: 450px; /* Чтобы сетка не была слишком широкой */
-        gap: 15px;
-    }
+    .atmosphere-inner { flex-direction: row; justify-content: space-between; align-items: center; }
+    .atmosphere-text { flex: 1; max-width: 500px; }
+    .features-grid { flex: 1; display: grid; grid-template-columns: repeat(2, 1fr) !important; max-width: 360px; gap: 15px; margin-left: auto; }
 }
+.check-list { list-style: none !important; padding: 0; margin-top: 20px; }
+.check-list li { margin-bottom: 12px; padding-left: 30px; position: relative; font-size: 16px; line-height: 1.4; color: var(--text); }
+.check-list li::before { content: "✓"; position: absolute; left: 0; top: 0; color: #2196f3; font-weight: 900; font-size: 18px; }
 
-/* --- ГАЛОЧКИ (Check-list) --- */
-.check-list { 
-    list-style: none !important; /* Убираем стандартные точки */
-    padding: 0;
-    margin-top: 20px; 
+/* Features Grid */
+.features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+@media (max-width: 1024px) {
+    .features-grid { max-width: 500px; margin: 0 auto; }
 }
-
-.check-list li { 
-    margin-bottom: 12px; 
-    padding-left: 30px; 
-    position: relative; 
-    font-size: 16px;
-    line-height: 1.4;
-    color: var(--text);
+@media (max-width: 767px) {
+    .features-grid { max-width: 400px; margin: 0 auto; }
 }
-
-/* Синяя галочка */
-.check-list li::before { 
-    content: "✓"; 
-    position: absolute; 
-    left: 0; 
-    top: 0;
-    color: #2196f3; /* Твой синий цвет */
-    font-weight: 900; 
-    font-size: 18px;
-}
-
-/* --- КАРТОЧКИ (Адаптив под iPhone 12 Pro) --- */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 колонки на мобильном */
-    gap: 12px;
-    width: 100%;
+@media (max-width: 450px) {
+    .features-grid { max-width: 300px; margin: 0 auto; }
 }
 
 .f-card {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    aspect-ratio: 1 / 1; /* На мобилках делаем их КВАДРАТНЫМИ, чтобы не были огромными */
-    background: var(--surface);
-    border: 1px solid var(--line);
-    text-decoration: none;
-    transition: transform 0.3s ease;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; text-align: center; box-shadow: var(--shadow); transition: all 0.3s ease; 
+    display: block; text-decoration: none; color: inherit; overflow: hidden; position: relative; aspect-ratio: 16/12;
 }
-
-/* На iPhone 12 Pro (маленькие экраны) чуть уменьшим высоту еще сильнее, если нужно */
-@media (max-width: 400px) {
-    .f-card {
-        aspect-ratio: 1 / 0.9; /* Еще компактнее */
-    }
-}
-
-.f-card__img {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-}
-
-/* Затемнение внизу для читаемости текста */
+.f-card:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+.f-card__img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; }
 .f-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 50%);
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%); pointer-events: none; border-radius: inherit;
 }
-
 .f-card p {
-    position: absolute;
-    bottom: 12px;
-    left: 10px;
-    right: 10px;
-    z-index: 2;
-    color: white;
-    margin: 0;
-    font-weight: 700;
-    font-size: 13px;
-    text-align: center;
+    font-size: 15px; font-weight: 700; color: white; margin: 0; line-height: 1.3;
+    position: absolute; bottom: 0; left: 0; width: 100%; padding: 12px; z-index: 2;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
 }
-
-
-/* 1. ГРИД (СЕТКА) */
-.features-grid { 
-    display: grid; 
-    grid-template-columns: repeat(2, 1fr); 
-    gap: 10px; 
-}
-
-@media (min-width: 768px) { 
-    .features-grid { 
-        grid-template-columns: repeat(4, 1fr); 
-        gap: 12px; 
-    } 
-}
-@media (max-width: 767px) {
-    .features-grid {
-        max-width: 320px; /* Ограничиваем общую ширину сетки */
-        margin: 0 auto;   /* Ставим ее по центру экрана */
-    }
-    .f-card {
-        aspect-ratio: 1 / 1; /* Оставляем квадратиками */
-    }
-}
-@media (min-width: 1025px) {
-    /* ... стили текста ... */
-
-    .features-grid {
-        flex: 1;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr) !important;
-        max-width: 360px; /* <— Вот главная цифра! Было 450px. Сделай 360px или 320px, и карточки станут маленькими и аккуратными */
-        gap: 15px;
-        margin-left: auto; /* Прижмет сетку к правому краю, если нужно */
-    }
-}
-/* 2. КАРТОЧКА (Теперь это кликабельная область с изображением) */
-.f-card { 
-    background: var(--surface); 
-    border: 1px solid var(--line); 
-    border-radius: 14px; /* <— Оставил твой размер */
-    text-align: center; 
-    box-shadow: var(--shadow); 
-    transition: all 0.3s ease; 
-    
-    /* Специфично для кликабельной карточки-изображения: */
-    display: block; /* <— Обязательно для <a> */
-    text-decoration: none; 
-    color: inherit; 
-    overflow: hidden; /* Чтобы изображение не вылезало за скругления */
-    position: relative; /* <— ГЛАВНОЕ: для позиционирования текста и наложения */
-    aspect-ratio: 4 / 3;
-    /* УДАЛИЛ ТВОЙ PADDING (14px 12px), так как он создавал отступы */
-}
-
-/* 3. ЭФФЕКТЫ ПРИ НАВЕДЕНИИ */
-.f-card:hover { 
-    transform: translateY(-4px); 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
-}
-
-/* 4. ИЗОБРАЖЕНИЕ ВНУТРИ (класс пользователя .f-card__img) */
-.f-card__img {
-    position: absolute; /* <— На весь размер карточки */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* <— Масштабируем без искажений */
-    border-radius: inherit; /* Закругляем как карточку */
-    display: block;
-}
-
-/* 5. НАЛОЖЕНИЕ-ГРАДИЕНТ (чтобы текст был виден поверх фото) */
-.f-card::after {
-content: '';
-    position: absolute;
-    bottom: 0; 
-    left: 0; 
-    width: 100%;
-    height: 0%; /* Занимает только нижнюю треть */
-    background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
-    pointer-events: none;
-    border-radius: inherit;
-}
-/* 6. ТЕКСТ ПОД ФОТО */
-.f-card p { 
-    font-size: 17px; /* <— Твой размер или чуть больше */
-    font-weight: 700; /* <— Жирнее, как на картинке */
-    color: white; /* <— Обязательно БЕЛЫЙ текст */
-    margin: 0; 
-    line-height: 1.3; 
-    word-break: break-word; 
-    
-    /* Специфично для текста поверх фото: */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 15px; /* <— Внутренние отступы текста */
-    z-index: 2; /* Поверх градиента */
-	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8), 
-                 0 0 15px rgba(0, 0, 0, 0.6);
-}
-
 
 /* FAQ Accordion */
-.faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-list { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;text-align: center; }
 .faq-item { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); transition: 0.3s; }
 .faq-summary { padding: 18px 20px; font-weight: 600; cursor: pointer; list-style: none; position: relative; user-select: none; }
 .faq-summary::-webkit-details-marker { display: none; }
@@ -344,27 +152,8 @@ content: '';
 .faq-content { padding: 0 20px 20px 20px; color: var(--muted); border-top: 1px solid transparent; }
 .faq-item[open] .faq-content { border-top-color: var(--line); padding-top: 15px; }
 
-/* ФОРМА БРОНИРОВАНИЯ (GRID СТИЛЬ) */
-.booking-form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: transparent; padding: 0; border-radius: 0; border: none; box-shadow: none; }
-.booking-form input, .booking-form textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; font-size: 14px; color: var(--text); font-family: inherit; background: var(--surface-alt); transition: border-color 0.2s; }
-.booking-form input:focus, .booking-form textarea:focus { outline: none; border-color: var(--accent); background: var(--surface); }
-.booking-form textarea { resize: vertical; }
-.booking-form .full-width { grid-column: 1 / -1; }
-.booking-form button { grid-column: 1 / -1; padding: 14px 14px; font-size: 15px; font-weight: 600; margin-top: 6px; border: none; cursor: pointer; }
-.booking-form button:hover { opacity: 0.9; }
-
-@media (max-width: 900px) {
-  .booking-form input, .booking-form textarea { padding: 11px 13px; font-size: 13px; }
-  .booking-form button { padding: 12px 13px; font-size: 14px; }
-}
-@media (max-width: 500px) {
-  .booking-form { grid-template-columns: 1fr; }
-  .desktop-only { display: none; }
-}
-
 /* Carousel */
-.carousel { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);overscroll-behavior-x: contain; /* Блокирует переход «назад/вперед» в браузере */
-    touch-action: pan-y; }
+.carousel { background: var(--surface); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); overscroll-behavior-x: contain; touch-action: pan-y; width: 100%; min-width: 0; }
 .carousel__viewport { position: relative; aspect-ratio: 16/9; background: #000; }
 .carousel__main-click-area { width: 100%; height: 100%; cursor: zoom-in; }
 .carousel__main-img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; }
@@ -374,7 +163,9 @@ content: '';
 .thumbs-scroller { display: flex; gap: 8px; padding: 12px; overflow-x: auto; scrollbar-width: none; }
 .thumb-img { width: 60px; height: 45px; border-radius: 6px; object-fit: cover; opacity: 0.4; flex-shrink: 0; cursor: pointer; transition: 0.2s; }
 .thumb-img.active { opacity: 1; box-shadow: 0 0 0 2px var(--accent); }
-
+.carousel__btn:hover {
+    animation: pulse 1s infinite; /* Пульсирует только когда навели курсор */
+}
 /* ZOOOOM */
 .fs-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; display:none; z-index: 2000; align-items:center; justify-content:center; }
 .fs-img { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -384,484 +175,431 @@ content: '';
 .fs-next { right: 0; }
 
 .footer-simple { padding: 40px 0; border-top: 1px solid var(--line); margin-top: 40px; }
-.contact-link { color: var(--accent); text-decoration: none; font-size: 22px; font-weight: 700; display: block; margin-top: 5px; }
-.contact-box { padding: 16px 0; }
-.contact-box strong { display: block; margin-top: 12px; font-weight: 600; }
-.contact-box p { margin: 4px 0 0 0; color: var(--muted); }
-.map-wrapper {
-    margin-top: 20px;
-}
 
-.static-map {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 300px;
-    /* ЗАМЕНИ ЭТУ ССЫЛКУ на путь к своему скриншоту карты, если он есть */
-    background-image: url('./icons/map.jpg');
-    background-size: cover;
-    background-position: center;
-    text-decoration: none;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.static-map:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-
-.static-map__label {
-	position: absolute;
-    bottom: 15px;       /* Расстояние от нижнего края карты */
-    left: 50%;          /* Ставим по центру горизонтали */
-    transform: translateX(-50%); /* Сдвигаем влево на половину ширины самой кнопки */
-    z-index: 10;
-
-    background: var(--surface);
-    color: var(--text);
-    padding: 12px 20px;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: background 0.3s;
-}
-
-.static-map:hover .static-map__label {
-    background: var(--accent);
-    color: #fff;
-}
-
-/* КОНТАКТЫ И БРОНИРОВАНИЕ */ 
-/* --- КОНТАКТЫ И БРОНИРОВАНИЕ (ГЛАВНЫЙ БЛОК) --- */
-.contacts-booking-wrapper { 
-    display: grid; 
-    /* Фиксируем колонки: форма гибкая, но ограниченная, календарь стабильный */
-    grid-template-columns: minmax(300px, 450px) 350px; 
-    gap: 40px; 
-    justify-content: center; /* Центрируем всю конструкцию на экране */
-    margin: 0 auto 60px;
-    padding: 0 20px;
-    align-items: start;
-}
-
-/* КОЛОНКА С КОНТАКТАМИ И ФОРМОЙ */
-.left-column-contact { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 20px;
-}
-
-/* Чтобы "Оставить заявку" не было огромным */
-.left-column-contact h2, 
-.left-column-contact h3 { 
-    font-size: 15px; 
-    margin: 0 0 5px 0; 
-	text-align: center
-}
-
-/* ПРАВАЯ КОЛОНКА (КАЛЕНДАРЬ) */
-.right-column-calendar { 
-    width: 410px;
-    display: flex;
-    flex-direction: column;
-}
-
-.right-column-calendar h3 { 
-    font-size: 18px; 
-    margin-bottom: 15px;
-	text-align: center;
-    background: transparent !important;
-}
-
-/* ОБОЛОЧКА КАЛЕНДАРЯ */
-.calendar-widget-container {
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
-
-/* ФОРМА (КОМПАКТНЫЙ СТИЛЬ) */
-.booking-form { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 10px; 
-}
-
-.booking-form input, 
-.booking-form textarea { 
-    width: 100%; 
-    padding: 10px 14px; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 10px; 
-    font-size: 14px; 
-    background: #f8fafc; 
-    box-sizing: border-box;
-}
-
-.booking-form textarea { 
-    height: 85px; /* Подобрано, чтобы высота формы совпала с календарем */
-    resize: none; 
-}
-
-.booking-form .full-width { grid-column: 1 / -1; }
-
-.booking-form button { 
-    grid-column: 1 / -1; 
-    padding: 14px; 
-    border-radius: 10px;
-    font-weight: 600;
-    background: #3172e0;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-/* --- АДАПТИВ: ДВЕ КОЛОНКИ ОТ 760px --- */
-@media (min-width: 760px) and (max-width: 1000px) {
-    .contacts-booking-wrapper {
-        grid-template-columns: 1fr 320px; /* На планшетах чуть поджимаем календарь */
-        gap: 20px;
-    }
-    .right-column-calendar { width: 320px; }
-}
-
-/* --- МОБИЛКИ (МЕНЬШЕ 760px) --- */
-@media (max-width: 759px) {
-    .contacts-booking-wrapper { 
-        grid-template-columns: 1fr; 
-        max-width: 450px;
-    }
-    .right-column-calendar { 
-        order: 1; 
-        width: 100%; 
-        margin-bottom: 30px;
-        align-items: center;
-    }
-    .left-column-contact { order: 2; }
-    .booking-form { grid-template-columns: 1fr; }
-}
-/* КАЛЕНДАРЬ */
-.calendar-card { 
-    background: var(--surface); 
-    border: 1px solid var(--line); 
-    border-radius: 16px; 
-    padding: 12px; 
-    box-shadow: var(--shadow); 
-    box-sizing: border-box;
-}
-.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.cal-title { font-size: 16px; font-weight: 700; text-transform: capitalize; }
-.cal-btn { background: var(--surface-alt); border: none; width: 28px; height: 28px; border-radius: 6px; font-size: 18px; cursor: pointer; display: grid; place-items: center; color: var(--text); }
-.cal-btn:hover { background: var(--line); }
-.calendar-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
-.calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
-.cal-day { aspect-ratio: 1/1; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 6px; font-size: 11px; font-weight: 500; background: transparent; border: 1px solid transparent; padding: 1px; }
-.cal-day.empty { background: none; }
-.cal-day.free { background: var(--cal-free-bg); color: var(--cal-free-text); border: 1px solid var(--cal-free-border); } 
-.cal-day.free .price { font-size: 7px; font-weight: 700; margin-top: 1px; color: var(--accent); }
-.cal-day.booked { background: var(--cal-booked-bg); color: var(--cal-booked-text); text-decoration: line-through; opacity: 0.8; cursor: not-allowed; }
-.cal-day.booked .price { display: none; }
-.calendar-legend { display: flex; gap: 12px; margin-top: 12px; font-size: 11px; color: var(--muted); justify-content: center; }
-.legend-item { display: flex; align-items: center; gap: 4px; }
-.legend-color { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
-
-
-
-/* ДЕСКТОП - НОРМАЛЬНАЯ КОМПАКТНАЯ ШАПКА */
+/* Десктоп Шапка */
 @media (min-width: 1000px) {
-    .header__inner {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 0;
-        gap: 10px;
-    }
-    .brand__logo { width: 32px; height: 32px; font-size: 16px; border-radius: 50%; }
+    .header__inner { flex-direction: row; justify-content: space-between; align-items: center; padding: 12px 0; gap: 10px; }
+    .brand__logo { width: 32px; height: 32px; font-size: 16px; }
     .brand__title { font-size: 15px; }
     .brand__sub { font-size: 12px; }
     .brand__text { flex-direction: row; gap: 4px; }
     .nav { width: auto; justify-content: flex-end; }
     .nav__links { gap: 15px; font-size: 15px; justify-content: flex-end; }
     .nav a { font-size: 18px; }
-	.cal-day { font-size: 18px; }
-    .cal-day.free .price { font-size: 14px; }
 }
-
-@media (min-width: 901px) {
-  .calendar-card { padding: 20px; }
-  .calendar-header { margin-bottom: 15px; }
-  .cal-title { font-size: 18px; }
-  .cal-btn { width: 32px; height: 32px; font-size: 20px; }
-  .calendar-weekdays { font-size: 12px; margin-bottom: 10px; }
-  .calendar-days { gap: 4px; }
-  .cal-day { font-size: 14px; border-radius: 8px; padding: 0; }
-  .cal-day.free .price { font-size: 10px; margin-top: 2px; }
-  .calendar-legend { gap: 15px; margin-top: 20px; font-size: 12px; }
-  .legend-item { gap: 6px; }
-  .legend-color { width: 12px; height: 12px; border-radius: 3px; }
-}
-.legend-free { background: var(--cal-free-bg); border: 1px solid var(--cal-free-border); }
-.legend-booked { background: var(--cal-booked-bg); opacity: 0.8; }
 
 @media (max-width: 1024px) {
     .weather-widget { display: none; }
     .nav__links { gap: 23px; }
     .nav a { font-size: 17px; }
-    .cal-day { font-size: 13px; }
-    .cal-day.free .price { font-size: 11px; }}
-
-@media (max-width: 768px) {
-    .weather-widget { display: none; }
-	.nav__links { gap: 23px; }
-    .nav a { font-size: 17px; }
-	.cal-day { font-size: 13px; }
-    .cal-day.free .price { font-size: 11px; }
 }
-
 @media (max-width: 450px) {
     .nav__links { gap: 15px; }
     .nav a { font-size: 15px; }
-    .cal-day { font-size: 14px; }
-    .cal-day.free .price { font-size: 10px; }
 }
-@media (max-width: 360px) {
+@media (max-width: 353px) {
     .nav__links { gap: 10px; }
-    .nav a { font-size: 16px; }
-    .cal-day { font-size: 14px; }
-    .cal-day.free .price { font-size: 10px; }
-}
-@media (max-width: 356px) {
-    .nav__links { gap: 9px; }
     .nav a { font-size: 14px; }
-    .cal-day { font-size: 14px; }
-    .cal-day.free .price { font-size: 10px; }
 }
 
-/* --- УНИВЕРСАЛЬНЫЙ ГРИД ДЛЯ СЕКЦИЙ Вторая страница--- */
-.grid-split {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Две равные колонки */
-    gap: 60px;
-    align-items: center;
-    margin-bottom: 20px;
-}
+/* Grid Split Секции (О доме / Галерея) */
+.grid-split { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 20px; }
+.grid-split--reverse { direction: rtl; }
+.grid-split--reverse .grid-split__text, .grid-split--reverse .carousel { direction: ltr; }
+.grid-split__text { display: flex; flex-direction: column; gap: 20px; }
+.grid-split__text h2 { font-size: clamp(24px, 4vw, 32px); margin: 0; line-height: 1.2; }
+.grid-split__text p { font-size: 16px; line-height: 1.6; margin: 0; text-align: justify !important; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; -ms-hyphens: auto;}
 
-/* Отзеркаливание секции */
-.grid-split--reverse {
-    direction: rtl; /* Меняем направление колонок */
-}
-
-.grid-split--reverse .grid-split__text,
-.grid-split--reverse .carousel {
-    direction: ltr; /* Возвращаем тексту нормальное чтение */
-}
-
-/* ТЕКСТОВЫЙ БЛОК */
-.grid-split__text {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.grid-split__text h2 {
-    font-size: clamp(24px, 4vw, 32px); /* Адаптивный заголовок */
-    margin: 0;
-    line-height: 1.2;
-}
-
-.grid-split__text p {
-    font-size: 16px;
-    line-height: 1.6;
-    color: var(--text-muted); /* Или просто серый цвет */
-    margin: 0;
-}
-
-/* КАРУСЕЛЬ ВНУТРИ ГРИДА */
-.carousel {
-    width: 100%;
-    min-width: 0; /* Важно, чтобы карусель не распирала грид */
-}
-
-/* --- АДАПТИВ ДЛЯ ПЛАНШЕТОВ И МОБИЛОК --- */
-
-/* На планшетах (iPad) чуть уменьшаем зазор */
-@media (max-width: 1024px) {
-    .grid-split {
-        gap: 40px;
-    }
-}
-
-/* На телефонах (до 768px) всё в одну колонку */
+@media (max-width: 1024px) { .grid-split { gap: 40px; } }
 @media (max-width: 768px) {
-    .grid-split, 
-    .grid-split--reverse {
-        grid-template-columns: 1fr; /* Одна колонка */
-        gap: 30px;
-        direction: ltr; /* Отменяем реверс на мобилках */
-    }
-
-    .grid-split__text {
-        order: 2; /* Текст всегда под картинкой */
-        text-align: center;
-    }
-
-    .carousel {
-        order: 1; /* Картинка всегда сверху */
-    }
-}
-@media (max-width: 768px) {
-    /* 1. Заставляем сам календарь занимать всю доступную ширину родителя */
-    .calendar-block, .calendar-card { /* Замени на свой класс обертки календаря */
-        width: 100% !important;
-        display: block !important;
-    }
-
-    /* 2. Жестко фиксируем сетку */
-    .cal-days-grid {
-        display: grid !important;
-        grid-template-columns: repeat(7, 1fr) !important; /* 7 колонок строго равной ширины */
-        width: 100% !important; /* ВАЖНО: запрещаем сетке сжиматься по контенту */
-        box-sizing: border-box;
-    }
-
-    /* 3. Делаем ячейки одинаковыми и фиксируем их минимальную высоту */
-    .cal-day {
-        width: 100% !important;
-        min-height: 46px !important; /* Подбери высоту, чтобы она совпадала со свободным месяцем */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        overflow: hidden; /* Чтобы длинный текст не ломал ячейку */
-    }
-
-    /* 4. Заглушка для занятых дней (если пустой span из прошлого шага не сработал) */
-    .cal-day.booked {
-        /* Занятые дни будут точно такой же высоты и ширины, как и свободные */
-        min-height: 46px !important; 
-    }
-}
-section[id] {
-    scroll-margin-top: 80px; /* Если шапка выше, увеличь цифру */
+    .grid-split, .grid-split--reverse { grid-template-columns: 1fr; gap: 30px; direction: ltr; }
+    .grid-split__text { order: 2; text-align: center; }
+    .carousel { order: 1; }
 }
 
-/* Делаем текст ровным на ВСЕХ устройствах */
-.grid-split__text p {
-    text-align: justify !important; /* Текст растягивается ровно от края до края */
-    text-justify: inter-word; /* Делает пробелы между словами одинаковыми */
-    
-    /* Включаем переносы по слогам, чтобы не было больших дыр между словами */
-    hyphens: auto;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
-}
+section[id] { scroll-margin-top: 80px; }
+.section-title { text-align: center !important; margin-left: 0 !important; padding-left: 0 !important; }
 
-/* Выравниваем сам заголовок ровно по левому краю */
-.section-title {
-    text-align: center !important;
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-}
-
-@keyframes pulse {
-    0% { 
-        transform: translateY(-50%) scale(1); 
-        opacity: 0.7; 
-    }
-    50% { 
-        transform: translateY(-50%) scale(1.1); /* 1.2 может быть слишком много для текста */
-        opacity: 0.4; 
-    }
-    100% { 
-        transform: translateY(-50%) scale(1); 
-        opacity: 0.7; 
-    }
-}
+@keyframes pulse { 0% { transform: translateY(-50%) scale(1); opacity: 0.7; } 50% { transform: translateY(-50%) scale(1.1); opacity: 0.4; } 100% { transform: translateY(-50%) scale(1); opacity: 0.7; } }
 
 @media (max-width: 1030px) {
-    .carousel__btn {
-        /* 1. Прячем всё старое (текст или иконки внутри кнопки) */
-        font-size: 0 !important;
-        color: transparent !important;
-        
-        /* 2. Настраиваем контейнер */
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center;
-        justify-content: center;
-        
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        
-        width: 80px;
-        background: none !important;
-        border: none !important;
-        opacity: 1;
-        cursor: pointer;
-    }
-
-    /* 3. Верхняя надпись SWIPE */
-    .carousel__btn::before {
-        content: 'SWIPE';
-        display: block;
-        font-size: 25px; /* Возвращаем размер шрифта только для текста */
-        font-family: sans-serif;
-        font-weight: bold;
-        letter-spacing: 1.5px;
-        color: #ffffff; /* Цвет текста */
-        margin-bottom: 2px;
-        visibility:visible;
-		text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8),  /* Темный ореол вокруг */
-            0px 0px 10px rgba(0, 0, 0, 0.6), /* Широкое размытие */
-            2px 2px 4px rgba(0, 0, 0, 0.8);  /* Классическая тень вниз-вправо */
-    }
-
-    /* 4. Нижние двойные стрелки */
-    .carousel__btn::after {
-        display: block;
-        font-size: 65px; /* Размер стрелок */
-        font-family: serif;
-        font-weight: bold;
-        color: #ffffff;
-        visibility: visible;
-        line-height: 1;
-		text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8),  /* Темный ореол вокруг */
-            0px 0px 10px rgba(0, 0, 0, 0.6), /* Широкое размытие */
-            2px 2px 4px rgba(0, 0, 0, 0.8);  /* Классическая тень вниз-вправо */
-    }
-
-    /* Направление стрелок для каждой кнопки */
-    .carousel__btn.prev::after {
-        content: '«'; /* Красивые двойные кавычки-стрелки */
-    }
-
-    .carousel__btn.next::after {
-        content: '»';
-    }
-
-    /* Позиционирование на экране */
+    .carousel__btn { font-size: 0 !important; color: transparent !important; display: flex !important; flex-direction: column !important; align-items: center; justify-content: center; position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 80px; background: none !important; border: none !important; opacity: 1; cursor: pointer; }
+    .carousel__btn::before { content: 'SWIPE'; display: block; font-size: 25px; font-family: sans-serif; font-weight: bold; letter-spacing: 1.5px; color: #ffffff; margin-bottom: 2px; visibility:visible; text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8), 0px 0px 10px rgba(0, 0, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+    .carousel__btn::after { display: block; font-size: 65px; font-family: serif; font-weight: bold; color: #ffffff; visibility: visible; line-height: 1; text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.8), 0px 0px 10px rgba(0, 0, 0, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+    .carousel__btn.prev::after { content: '«'; }
+    .carousel__btn.next::after { content: '»'; }
     .carousel__btn.prev { left: 15px; }
     .carousel__btn.next { right: 15px; }
 }
-
 @media (max-width: 550px) {
-	.carousel__btn::before{
-		font-size: 20px;
-	}
-	.carousel__btn::after{
-		font-size: 35px;
-	}
+	.carousel__btn::before{ font-size: 20px; }
+	.carousel__btn::after{ font-size: 35px; }
 	.carousel__btn.prev { left: 0px; }
     .carousel__btn.next { right: 0px; }
+}
+
+/* ========================================================================= */
+/* НОВАЯ ИДЕАЛЬНАЯ СЕТКА: ФОРМА + КАЛЕНДАРЬ + КОНТАКТЫ + КАРТА (ИЗМЕНЕНИЯ)   */
+/* ========================================================================= */
+
+.booking-grid-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Ровно пополам */
+    gap: 30px;
+    align-items: stretch; /* Растягивает карточки по высоте самой высокой */
+    max-width: 1000px;
+    margin: 0 auto 30px auto;
+}
+
+.booking-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    text-align: center;
+    color: var(--text);
+}
+
+/* ФОРМА И ЭЛЕМЕНТЫ ВВОДА */
+.booking-form-integrated {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: 100%;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.booking-form-integrated input, 
+.booking-form-integrated select, 
+.booking-form-integrated textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface-alt);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.booking-form-integrated input:focus, 
+.booking-form-integrated select:focus, 
+.booking-form-integrated textarea:focus {
+    border-color: var(--accent);
+}
+
+.booking-form-integrated textarea {
+    flex-grow: 1; /* Растягивает текстовое поле до низа */
+    min-height: 80px;
+    resize: none;
+}
+
+.guests-select { cursor: pointer; }
+
+.price-display {
+    background: var(--accent);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-weight: 700;
+    margin-top: auto;
+}
+
+/* КАЛЕНДАРЬ */
+.calendar-widget {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Чтобы календарь занимал всю карточку */
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.cal-title { font-weight: 700; font-size: 16px; }
+.cal-btn {
+    background: var(--surface-alt);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    color: var(--text);
+    transition: 0.2s;
+}
+.cal-btn:hover { background: var(--line); }
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    flex-grow: 1; /* Растягивает сетку по высоте */
+}
+
+/* ИСПРАВЛЕНИЕ: Убрали aspect-ratio: 1/1, чтобы даты не выезжали из сетки на широких экранах */
+.cal-day {
+    min-height: 45px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid transparent;
+    padding: 4px 0;
+	font-weight: bold;
+}
+
+.cal-day.empty { cursor: default; }
+.cal-day.free { background: var(--cal-free-bg); color: var(--cal-free-text); }
+.cal-day.booked { background: var(--cal-booked-bg); color: var(--cal-booked-text); text-decoration: line-through; cursor: not-allowed; }
+.cal-day.selected { background: var(--accent) !important; color: white !important; }
+.cal-day.in-range { background: rgba(0, 113, 227, 0.1); }
+.cal-day .price { font-size: 12px; margin-top: 2px; color:#0071e3; font-weight: bold;  }
+
+/* ЛЕГЕНДА С ЦВЕТНЫМИ КВАДРАТАМИ */
+.calendar-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Чтобы не слипались, если мало места */
+    gap: 15px;
+    margin-top: 20px;
+    font-size: 12px;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; color: var(--text); }
+.legend-color { width: 12px; height: 12px; border-radius: 3px; }
+
+.legend-free { background: var(--cal-free-bg); border: 1px solid var(--cal-free-border); } /* Зеленый */
+.legend-booked { background: #ffffff; border: 1px solid var(--muted); } /* Белый */
+.legend-selected { background: var(--accent); border: 1px solid var(--accent); } /* Синий */
+
+/* КОНТАКТЫ */
+.contacts-content {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.contact-label { font-weight: 700; margin-bottom: 5px; font-size: larger;}
+.contact-link { color: var(--accent); font-weight: 700; font-size: 22px; text-decoration: none;display:block;margin-top: 15px;}
+
+/* КАРТА */
+.map-card { padding: 15px; } /* Чуть меньше отступов для самой карты */
+.static-map {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    background-image: url('./icons/map.jpg');
+    background-size: cover;
+    background-position: center;
+    text-decoration: none;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.static-map:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.static-map__label {
+    position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10; white-space: nowrap; width: max-content;
+    background: var(--surface); color: var(--text); padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: background 0.3s;
+}
+.static-map:hover .static-map__label { background: var(--accent); color: #fff; }
+
+
+/* ======================================== */
+/* Стили для иконок телеграм и востапп */
+/* ======================================== */
+
+/* Контейнер для иконок */
+.contact-socials {
+    display: flex;
+    justify-content: center; /* Центрируем, так как у вас .contacts-content тоже в центре */
+    gap: 15px;               /* Расстояние между кнопками */
+    margin-top: 20px;
+}
+.contact-label{
+	 display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Общие стили для иконок */
+.social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: var(--surface-alt); /* Светлый фон */
+    color: var(--text);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.social-icon svg {
+    width: 18px;            /* Уменьшаем размер самой иконки внутри круга */
+    height: 18px;
+}
+/* Эффект при наведении */
+.social-icon:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Цвета брендов при наведении */
+.social-icon.wa:hover {
+    background-color: #25D366; /* Зеленый WhatsApp */
+    color: white;
+}
+
+.social-icon.tg:hover {
+    background-color: #0088cc; /* Синий Telegram */
+    color: white;
+}
+
+/* ========================================= */
+/* Скелетон */
+/* ========================================= */
+/* Базовый вид скелетона */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2e2e7 !important; /* Светло-серый фон (вместо черного) */
+  border-radius: 18px; /* Чтобы углы совпадали с фото */
+}
+
+/* Анимация перелива */
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.4) 20%,
+    rgba(255, 255, 255, 0.6) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 2s infinite; /* Назовем анимацию shimmer */
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Плавное проявление картинки */
+.carousel__main-img {
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+.carousel__main-img.loaded {
+  opacity: 1;
+}
+
+/* ========================================================================= */
+/* АДАПТИВНОСТЬ ДЛЯ БЛОКОВ БРОНИРОВАНИЯ И КАРТЫ                              */
+/* ========================================================================= */
+
+/* Планшеты (сохраняем два ряда, но делаем шрифты/отступы компактнее, чтобы влезало) */
+@media (max-width: 900px) {
+    .booking-grid-wrapper { gap: 15px; }
+    .booking-card { padding: 15px; }
+    .card-title { font-size: 16px; margin-bottom: 12px; }
+    
+    .booking-form-integrated input, 
+    .booking-form-integrated select, 
+    .booking-form-integrated textarea { padding: 10px; font-size: 13px; }
+    
+    .cal-day { font-size: 12px; min-height: 38px; }
+    .cal-day .price { font-size: 8px; }
+}
+
+/* Мобильные телефоны (схлопываем в один столбец ТОЛЬКО с 650px) */
+@media (max-width: 650px) {
+    .booking-grid-wrapper {
+        grid-template-columns: 1fr; /* Стакаем в один столбец */
+        gap: 10px;
+		width: 70%;
+    }
+    .calendar-card-wrapper {
+        order: -1; /* На мобильном календарь ставим ВЫШЕ формы для удобства */
+    }
+    .form-row {
+        grid-template-columns: 1fr; /* Инпуты заезда/выезда друг под другом */
+    }
+}
+
+@media (max-width: 500px) {
+    .booking-grid-wrapper {
+        grid-template-columns: 1fr; /* Стакаем в один столбец */
+        gap: 10px;
+		width: 80%;
+    }
+    .calendar-card-wrapper {
+        order: -1; /* На мобильном календарь ставим ВЫШЕ формы для удобства */
+    }
+    .form-row {
+        grid-template-columns: 1fr; /* Инпуты заезда/выезда друг под другом */
+    }
+}
+
+@media (max-width: 440px) {
+    .booking-grid-wrapper {
+        grid-template-columns: 1fr; /* Стакаем в один столбец */
+        gap: 10px;
+		width: 90%;
+    }
+    .calendar-card-wrapper {
+        order: -1; /* На мобильном календарь ставим ВЫШЕ формы для удобства */
+    }
+    .form-row {
+        grid-template-columns: 1fr; /* Инпуты заезда/выезда друг под другом */
+    }
 }

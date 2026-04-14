@@ -48,8 +48,16 @@
             <div class="carousel" data-carousel="palace">
               <div class="carousel__viewport">
                 <button class="carousel__btn prev" data-prev>‹</button>
-                <div class="carousel__main-click-area" data-zoom-trigger>
-                  <img src="./palace/01.webp" class="carousel__main-img" data-main-img alt="Дворец" />
+                <div class="carousel__main-click-area skeleton" data-zoom-trigger>
+                  <img
+                    src="./palace/01.webp"
+                    class="carousel__main-img"
+                    data-main-img
+                    alt="Дворец"
+                    onload="
+                      this.classList.add('loaded');
+                      this.parentElement.classList.remove('skeleton');
+                    " />
                 </div>
                 <button class="carousel__btn next" data-next>›</button>
               </div>
@@ -79,8 +87,16 @@
             <div class="carousel" data-carousel="park">
               <div class="carousel__viewport">
                 <button class="carousel__btn prev" data-prev>‹</button>
-                <div class="carousel__main-click-area" data-zoom-trigger>
-                  <img src="./park/01.webp" class="carousel__main-img" data-main-img alt="Парк" />
+                <div class="carousel__main-click-area skeleton" data-zoom-trigger>
+                  <img
+                    src="./park/01.webp"
+                    class="carousel__main-img"
+                    data-main-img
+                    alt="Парк"
+                    onload="
+                      this.classList.add('loaded');
+                      this.parentElement.classList.remove('skeleton');
+                    " />
                 </div>
                 <button class="carousel__btn next" data-next>›</button>
               </div>
@@ -109,8 +125,16 @@
             <div class="carousel" data-carousel="trail">
               <div class="carousel__viewport">
                 <button class="carousel__btn prev" data-prev>‹</button>
-                <div class="carousel__main-click-area" data-zoom-trigger>
-                  <img src="./tropa/01.webp" class="carousel__main-img" data-main-img alt="Тропа" />
+                <div class="carousel__main-click-area skeleton" data-zoom-trigger>
+                  <img
+                    src="./tropa/01.webp"
+                    class="carousel__main-img"
+                    data-main-img
+                    alt="Тропа"
+                    onload="
+                      this.classList.add('loaded');
+                      this.parentElement.classList.remove('skeleton');
+                    " />
                 </div>
                 <button class="carousel__btn next" data-next>›</button>
               </div>
@@ -139,8 +163,16 @@
             <div class="carousel" data-carousel="aqua">
               <div class="carousel__viewport">
                 <button class="carousel__btn prev" data-prev>‹</button>
-                <div class="carousel__main-click-area" data-zoom-trigger>
-                  <img src="./akvapark/01.webp" class="carousel__main-img" data-main-img alt="Аквапарк" />
+                <div class="carousel__main-click-area skeleton" data-zoom-trigger>
+                  <img
+                    src="./akvapark/01.webp"
+                    class="carousel__main-img"
+                    data-main-img
+                    alt="Аквапарк"
+                    onload="
+                      this.classList.add('loaded');
+                      this.parentElement.classList.remove('skeleton');
+                    " />
                 </div>
                 <button class="carousel__btn next" data-next>›</button>
               </div>
@@ -170,5 +202,6 @@
       <img class="fs-img" id="fs-img" alt="Увеличенное фото" />
       <button class="fs-nav fs-next" id="fs-next">›</button>
     </div>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </body>
 </html>

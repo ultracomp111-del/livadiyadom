@@ -22,7 +22,7 @@ export async function sendTelegramMessage(formData) {
     return { success: false, message: '❌ Ошибка конфигурации. Токены не найдены.' };
   }
 
-  const { name, phone, checkIn, checkOut, guests, message } = formData;
+  const { name, phone, checkIn, checkOut, guests, totalPrice, message } = formData;
 
   if (!name || !phone) {
     return { success: false, message: '❌ Имя и телефон обязательны' };
@@ -30,13 +30,14 @@ export async function sendTelegramMessage(formData) {
 
   // Форматируем сообщение
   const telegramMessage = `
-📝 <b>Новая заявка на бронь!</b>
+📝 <b>НОВАЯ ЗАЯВКА НА БРОНЬ!</b>
 
 👤 <b>Имя:</b> ${escapeHtml(name)}
 📱 <b>Телефон:</b> <code>${phone}</code>
 🔢 <b>Кол-во гостей:</b> ${guests || '1'}
 📅 <b>Дата заезда:</b> ${checkIn || 'Не указана'}
 📅 <b>Дата выезда:</b> ${checkOut || 'Не указана'}
+💰 <b>Итоговая стоимость:</b> <b>${escapeHtml(totalPrice)}</b>
 💬 <b>Сообщение:</b> ${message ? escapeHtml(message) : 'Не указано'}
   `.trim();
 

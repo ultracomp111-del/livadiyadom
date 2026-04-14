@@ -1,22 +1,24 @@
 import { sendTelegramMessage } from './api/telegram.js';
 
 // ==========================================
-// 1. КОНФИГ БРОНИРОВАНИЯ
+// 1. КОНФИГ БРОНИРОВАНИЯ И ЦЕН
 // ==========================================
 const MY_BOOKINGS = {
-    defaultPrice: "3500₽", 
-    availableMonths: [5, 6, 7, 8, 9, 10],
-    monthlyPrices: { 5: "3500₽", 6: "4000₽", 7: "4500₽", 8: "5000₽", 9: "3500₽", 10: "3000₽" },
-    specialPrices: { "2026-05-01": "5000₽", "2026-05-09": "5000₽", "2026-06-12": "4500₽" },
-    bookedFullMonths: [7, 8], 
-    bookedDates: ["2026-05-10", "2026-05-11", "2026-06-15"]
+    defaultPrice: 3500, 
+    availableMonths: [ 6, 7, 8, 9, 10], // Месяцы (5 = Май)
+    monthlyPrices: { 5: 3500, 6: 4000, 7: 4500, 8: 5000, 9: 4000, 10: 3000 },
+    specialPrices: {  },
+    bookedFullMonths: [], // Полностью занятые месяцы
+    bookedDates: ["2026-07-20","2026-07-21","2026-07-22","2026-07-23","2026-07-24","2026-07-25","2026-07-26","2026-07-27","2026-07-28","2026-07-29","2026-07-30","2026-07-31" ] // Занятые дни
 };
+
+// Состояния выбора
+let selectedStart = null;
+let selectedEnd = null;
 
 // ==========================================
 // 2. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
 // ==========================================
-
-// Загрузчик WebP с переходом на JPG
 function setImgSrc(imgElement, path) {
     if (!imgElement || !path) return;
     const cleanPath = path.replace(/\.(webp|jpg|jpeg|png)$/i, '');
@@ -34,11 +36,132 @@ function setImgSrc(imgElement, path) {
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ ---
+    const calDaysContainer = document.getElementById('calendar-days');
+    const checkInInput = document.getElementById('check-in');
+    const checkOutInput = document.getElementById('check-out');
+    const priceDisplay = document.getElementById('price-display');
+    const totalPriceLabel = document.getElementById('total-price');
+
+    if (calDaysContainer) {
+        let curDate = new Date();
+        let currentYear = 2026; // Или curDate.getFullYear()
+        // Начинаем с мая (индекс 4 в JS Date, но у нас в конфиге месяц 5)
+        let currentMonth = MY_BOOKINGS.availableMonths.includes(curDate.getMonth() + 1) ? curDate.getMonth() + 1 : MY_BOOKINGS.availableMonths[0];
+
+        const monthYearDisplay = document.getElementById('cal-month-year');
+        const prevBtn = document.getElementById('cal-prev');
+        const nextBtn = document.getElementById('cal-next');
+        const monthNames = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
+        function renderCalendar(month, year) {
+            calDaysContainer.innerHTML = '';
+            monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+
+            let firstDay = new Date(year, month - 1, 1).getDay();
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                calDaysContainer.innerHTML += `<div class="cal-day empty"></div>`;
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const fullDateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isBooked = MY_BOOKINGS.bookedFullMonths.includes(month) || MY_BOOKINGS.bookedDates.includes(fullDateStr);
+                const price = MY_BOOKINGS.specialPrices[fullDateStr] || MY_BOOKINGS.monthlyPrices[month] || MY_BOOKINGS.defaultPrice;
+
+                const dayEl = document.createElement('div');
+                dayEl.classList.add('cal-day');
+                dayEl.classList.add(isBooked ? 'booked' : 'free');
+                dayEl.innerHTML = `<span>${day}</span>${!isBooked ? `<span class="price">${price}₽</span>` : ''}`;
+
+                if (!isBooked) {
+                    dayEl.onclick = () => handleDateClick(fullDateStr);
+                    // Логика подсветки
+                    if (fullDateStr === selectedStart || fullDateStr === selectedEnd) dayEl.classList.add('selected');
+                    if (selectedStart && selectedEnd && fullDateStr > selectedStart && fullDateStr < selectedEnd) {
+                        dayEl.classList.add('in-range');
+                    }
+                }
+                calDaysContainer.appendChild(dayEl);
+            }
+        }
+
+        function handleDateClick(dateStr) {
+            if (!selectedStart || (selectedStart && selectedEnd)) {
+                selectedStart = dateStr;
+                selectedEnd = null;
+            } else if (dateStr > selectedStart) {
+                // Проверка, есть ли занятые дни в диапазоне
+                let isRangeValid = true;
+                let start = new Date(selectedStart);
+                let end = new Date(dateStr);
+                for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                    let checkDate = d.toISOString().split('T')[0];
+                    if (MY_BOOKINGS.bookedDates.includes(checkDate)) {
+                        isRangeValid = false; break;
+                    }
+                }
+
+                if (isRangeValid) {
+                    selectedEnd = dateStr;
+                } else {
+                    alert('В выбранном диапазоне есть занятые даты.');
+                    selectedStart = dateStr;
+                }
+            } else {
+                selectedStart = dateStr;
+            }
+
+            if (checkInInput) checkInInput.value = selectedStart || '';
+            if (checkOutInput) checkOutInput.value = selectedEnd || '';
+            
+            calculateTotal();
+            renderCalendar(currentMonth, currentYear);
+        }
+
+        function calculateTotal() {
+            if (selectedStart && selectedEnd) {
+                const start = new Date(selectedStart);
+                const end = new Date(selectedEnd);
+                let total = 0;
+                for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
+                    const dStr = d.toISOString().split('T')[0];
+                    const m = d.getMonth() + 1;
+                    total += MY_BOOKINGS.specialPrices[dStr] || MY_BOOKINGS.monthlyPrices[m] || MY_BOOKINGS.defaultPrice;
+                }
+                totalPriceLabel.textContent = total.toLocaleString();
+                priceDisplay.style.display = 'block';
+            } else {
+                priceDisplay.style.display = 'none';
+                totalPriceLabel.textContent = '0';
+            }
+        }
+
+        prevBtn.onclick = () => {
+            currentMonth--; if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+            if (MY_BOOKINGS.availableMonths.includes(currentMonth)) renderCalendar(currentMonth, currentYear);
+        };
+        nextBtn.onclick = () => {
+            currentMonth++; if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+            if (MY_BOOKINGS.availableMonths.includes(currentMonth)) renderCalendar(currentMonth, currentYear);
+        };
+
+        renderCalendar(currentMonth, currentYear);
+    }
+
     // --- ФОРМА БРОНИРОВАНИЯ ---
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            if (!selectedStart || !selectedEnd) {
+                alert("Пожалуйста, выберите даты заезда и выезда в календаре.");
+                return;
+            }
+
             const submitBtn = bookingForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             
@@ -46,22 +169,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 name: bookingForm.querySelector('[name="name"]')?.value?.trim() || '',
                 phone: bookingForm.querySelector('[name="phone"]')?.value?.trim() || '',
                 guests: bookingForm.querySelector('[name="guests"]')?.value || '1',
-                checkIn: bookingForm.querySelector('[name="date_start"]')?.value || '',
-                checkOut: bookingForm.querySelector('[name="date_end"]')?.value || '',
+                checkIn: selectedStart,
+                checkOut: selectedEnd,
+                totalPrice: document.getElementById('total-price').textContent + " ₽",
                 message: bookingForm.querySelector('[name="wishes"]')?.value?.trim() || ''
             };
-
-            if (!formData.name || !formData.phone) {
-                alert('Пожалуйста, заполните имя и телефон');
-                return;
-            }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправляю...';
             
             const result = await sendTelegramMessage(formData);
             alert(result.message);
-            if (result.success) bookingForm.reset();
+            if (result.success) {
+                bookingForm.reset();
+                selectedStart = null;
+                selectedEnd = null;
+                if (priceDisplay) priceDisplay.style.display = 'none';
+                renderCalendar(currentMonth, currentYear); // Обновляем стили календаря
+            }
             
             submitBtn.disabled = false;
             submitBtn.textContent = originalText;
@@ -72,71 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.header');
     if (header) {
         let lastScrollY = window.scrollY || window.pageYOffset;
-        
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY || window.pageYOffset;
-            
-            // Если скроллим вниз и ушли от верха на 50px - прячем
             if (currentScrollY > 50 && currentScrollY > lastScrollY) {
                 header.classList.add('header--hidden');
-            } 
-            // Если скроллим вверх или находимся в самом верху - показываем
-            else {
+            } else {
                 header.classList.remove('header--hidden');
             }
-            
-            // Защита от отрицательного скролла ("резинового" отскока) на iOS
             lastScrollY = currentScrollY <= 0 ? 0 : currentScrollY; 
         }, { passive: true });
-    }
-
-    // --- КАЛЕНДАРЬ ---
-    const calDaysContainer = document.getElementById('calendar-days');
-    if (calDaysContainer) {
-        const monthYearDisplay = document.getElementById('cal-month-year');
-        const prevBtn = document.getElementById('cal-prev');
-        const nextBtn = document.getElementById('cal-next');
-        const monthNames = ["", "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-        
-        let curDate = new Date();
-        let curMonth = MY_BOOKINGS.availableMonths.includes(curDate.getMonth() + 1) ? curDate.getMonth() + 1 : MY_BOOKINGS.availableMonths[0];
-        let curYear = curDate.getFullYear();
-
-        function renderCalendar(m, y) {
-            calDaysContainer.innerHTML = "";
-            monthYearDisplay.textContent = `${monthNames[m]} ${y}`;
-            let firstDay = new Date(y, m - 1, 1).getDay();
-            firstDay = firstDay === 0 ? 6 : firstDay - 1;
-            const daysInMonth = new Date(y, m, 0).getDate();
-
-            for (let i = 0; i < firstDay; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'cal-day empty';
-                calDaysContainer.appendChild(empty);
-            }
-
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'cal-day';
-                const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-                const isBooked = (MY_BOOKINGS.bookedFullMonths?.includes(m)) || (MY_BOOKINGS.bookedDates.includes(dateStr));
-                const price = MY_BOOKINGS.specialPrices[dateStr] || MY_BOOKINGS.monthlyPrices[m] || MY_BOOKINGS.defaultPrice;
-
-                dayDiv.classList.add(isBooked ? 'booked' : 'free');
-                dayDiv.innerHTML = `<span>${i}</span><span class="price">${isBooked ? '' : price}</span>`;
-                calDaysContainer.appendChild(dayDiv);
-            }
-        }
-
-        prevBtn.onclick = () => {
-            curMonth--; if(curMonth < 1) { curMonth = 12; curYear--; }
-            if(MY_BOOKINGS.availableMonths.includes(curMonth)) renderCalendar(curMonth, curYear);
-        };
-        nextBtn.onclick = () => {
-            curMonth++; if(curMonth > 12) { curMonth = 1; curYear++; }
-            if(MY_BOOKINGS.availableMonths.includes(curMonth)) renderCalendar(curMonth, curYear);
-        };
-        renderCalendar(curMonth, curYear);
     }
 
     // --- ГАЛЕРЕЯ И СВАЙПЫ ---
@@ -182,16 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
         carousel.querySelector('[data-prev]')?.addEventListener('click', () => update(localIndex - 1));
         carousel.querySelector('[data-next]')?.addEventListener('click', () => update(localIndex + 1));
 
-        // Свайп (ИСПРАВЛЕНО)
         let tsX = 0;
         carousel.addEventListener('touchstart', e => { 
-            // Если пальцем трогают миниатюры - не запускаем логику главного свайпа
             if (e.target.closest('[data-thumbs]')) return; 
             tsX = e.changedTouches[0].screenX; 
         }, {passive: true});
         
         carousel.addEventListener('touchend', e => {
-            // Игнорируем отпускание пальца над миниатюрами
             if (e.target.closest('[data-thumbs]')) return;
             let dx = tsX - e.changedTouches[0].screenX;
             if (Math.abs(dx) > 50) update(dx > 0 ? localIndex + 1 : localIndex - 1);
