@@ -617,3 +617,27 @@ section[id] { scroll-margin-top: 80px; }
         grid-template-columns: 1fr; /* Инпуты заезда/выезда друг под другом */
     }
 }
+
+/* Делаем так, чтобы инпуты не работали как распорки */
+.input-group {
+    flex: 1;
+    min-width: 0; /* КРИТИЧНО ДЛЯ IOS: Разрешаем блоку сжиматься */
+    width: 100%;
+}
+
+.input-group input[type="date"] {
+    width: 100%;
+    min-width: 0; /* КРИТИЧНО ДЛЯ IOS: Ломает упрямство Safari */
+    box-sizing: border-box;
+    -webkit-appearance: none; /* Сбрасываем жесткие системные стили Apple */
+}
+
+/* На мобильных экранах ставим их строго друг под друга */
+@media (max-width: 650px) {
+    .form-row {
+        display: flex !important;
+        flex-direction: column !important; /* Даты будут друг под другом */
+        width: 100% !important;
+        gap: 10px;
+    }
+}
