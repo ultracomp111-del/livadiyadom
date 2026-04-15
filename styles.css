@@ -197,7 +197,7 @@ body {
     .nav__links { gap: 15px; }
     .nav a { font-size: 15px; }
 }
-@media (max-width: 359px) {
+@media (max-width: 362px) {
     .nav__links { gap: 12px; }
     .nav a { font-size: 15px; }
 }
