@@ -175,6 +175,58 @@ body {
 .fs-next { right: 0; }
 
 .footer-simple { padding: 40px 0; border-top: 1px solid var(--line); margin-top: 40px; }
+.footer-privacy-link {
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.footer-privacy-link:hover {
+    color: var(--accent);
+}
+
+.cookie-banner {
+    position: fixed;
+    right: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 1200;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(28, 28, 30, 0.92);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.cookie-banner[hidden] {
+    display: none !important;
+}
+
+.cookie-banner__text {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.cookie-banner__text a {
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.cookie-banner__btn {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 14px;
+    min-height: 36px;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: 600;
+    background: #ffffff;
+    color: #1c1c1e;
+}
 
 /* Десктоп Шапка */
 @media (min-width: 1000px) {
@@ -308,6 +360,38 @@ section[id] { scroll-margin-top: 80px; }
     flex-grow: 1; /* Растягивает текстовое поле до низа */
     min-height: 80px;
     resize: none;
+}
+
+.booking-consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+    cursor: pointer;
+    min-height: 44px;
+    padding: 6px 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.booking-consent input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.booking-consent a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.booking-consent a:hover {
+    color: var(--accent);
 }
 
 .guests-select { cursor: pointer; }
@@ -560,6 +644,16 @@ section[id] { scroll-margin-top: 80px; }
     .booking-form-integrated input, 
     .booking-form-integrated select, 
     .booking-form-integrated textarea { padding: 10px; font-size: 13px; }
+    .booking-consent { font-size: 11px; }
+    .cookie-banner {
+        left: 12px;
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        max-width: none;
+        padding: 10px 12px;
+    }
+    .cookie-banner__text { font-size: 11px; }
+    .cookie-banner__btn { min-height: 34px; padding: 8px 12px; }
     
     .cal-day { font-size: 12px; min-height: 38px; }
     .cal-day .price { font-size: 8px; }

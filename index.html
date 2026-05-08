@@ -159,7 +159,12 @@
 
                 <div id="price-display" class="price-display" style="display: none">Итоговая стоимость: <span id="total-price">0</span> ₽</div>
 
-                <button type="submit" class="btn-main" style="width: 100%; margin-top: auto">📥 Отправить заявку</button>
+                <label for="pd-consent" class="booking-consent">
+                  <input type="checkbox" id="pd-consent" name="pd_consent" />
+                  <span>Я согласен на обработку персональных данных в соответствии с <a href="./privacy.html">Политикой конфиденциальности</a>.</span>
+                </label>
+
+                <button type="submit" class="btn-main" style="width: 100%; margin-top: auto" disabled>📥 Отправить заявку</button>
               </form>
             </div>
 
@@ -279,7 +284,7 @@
 
     <footer class="footer-simple">
       <div class="container text-center">
-        <p class="muted">© <span data-year>2026</span> • Ливадия, Ялта</p>
+        <p class="muted">© <span data-year>2026</span> • Ливадия, Ялта • <a href="./privacy.html" class="footer-privacy-link">Политика конфиденциальности</a></p>
       </div>
     </footer>
 
@@ -289,6 +294,15 @@
       <img class="fs-img" id="fs-img" />
       <button class="fs-nav fs-next" id="fs-next">›</button>
     </div>
+
+    <div class="cookie-banner" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Уведомление об использовании cookie" hidden>
+      <p class="cookie-banner__text">
+        Мы используем файлы cookie для улучшения работы сайта. Оставаясь на сайте, вы соглашаетесь с
+        <a href="./privacy.html">Политикой конфиденциальности</a>.
+      </p>
+      <button type="button" class="cookie-banner__btn" id="cookie-accept">Принять</button>
+    </div>
+
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
   </body>
 </html>

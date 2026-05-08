@@ -154,15 +154,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- ФОРМА БРОНИРОВАНИЯ ---
     const bookingForm = document.getElementById('booking-form');
     if (bookingForm) {
+        const submitBtn = bookingForm.querySelector('button[type="submit"]');
+        const pdConsentCheckbox = bookingForm.querySelector('#pd-consent');
+
+        const updateSubmitState = () => {
+            if (!submitBtn) return;
+            submitBtn.disabled = !(pdConsentCheckbox && pdConsentCheckbox.checked);
+        };
+
+        pdConsentCheckbox?.addEventListener('change', updateSubmitState);
+        updateSubmitState();
+
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            if (!pdConsentCheckbox?.checked) {
+                alert("Пожалуйста, подтвердите согласие на обработку персональных данных.");
+                updateSubmitState();
+                return;
+            }
             
             if (!selectedStart || !selectedEnd) {
                 alert("Пожалуйста, выберите даты заезда и выезда в календаре.");
                 return;
             }
 
-            const submitBtn = bookingForm.querySelector('button[type="submit"]');
+            if (!submitBtn) return;
             const originalText = submitBtn.textContent;
             
             const formData = {
@@ -188,8 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderCalendar(currentMonth, currentYear); // Обновляем стили календаря
             }
             
-            submitBtn.disabled = false;
             submitBtn.textContent = originalText;
+            updateSubmitState();
         });
     }
 
@@ -292,4 +309,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // Текущий год
     const yearSpan = document.querySelector('[data-year]');
     if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+    // --- COOKIE CONSENT ---
+    const cookieBanner = document.getElementById('cookie-banner');
+    const cookieAcceptBtn = document.getElementById('cookie-accept');
+    const cookieConsentKey = 'cookieConsentAccepted';
+
+    if (cookieBanner && cookieAcceptBtn) {
+        const alreadyAccepted = localStorage.getItem(cookieConsentKey) === 'true';
+        if (!alreadyAccepted) {
+            cookieBanner.hidden = false;
+        }
+
+        cookieAcceptBtn.addEventListener('click', () => {
+            localStorage.setItem(cookieConsentKey, 'true');
+            cookieBanner.hidden = true;
+        });
+    }
 });
