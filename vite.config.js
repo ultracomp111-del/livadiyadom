@@ -12,6 +12,7 @@ export default defineConfig({
         // Указываем Vite все входные точки (твои страницы)
         main: resolve(__dirname, 'index.html'),
         livadia: resolve(__dirname, 'livadia.html'),
+		privacy: resolve(__dirname, 'privacy.html'),
       },
     },
   },
