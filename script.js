@@ -1,4 +1,4 @@
-import { sendTelegramMessage } from './api/telegram.js';
+import { sendTelegramMessage } from './api/mail.js';
 
 // ==========================================
 // 1. КОНФИГ БРОНИРОВАНИЯ И ЦЕН
