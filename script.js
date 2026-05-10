@@ -156,26 +156,76 @@ document.addEventListener('DOMContentLoaded', () => {
     if (bookingForm) {
         const submitBtn = bookingForm.querySelector('button[type="submit"]');
         const pdConsentCheckbox = bookingForm.querySelector('#pd-consent');
+        const consentLabel = pdConsentCheckbox?.closest('label');
+        const nameInput = bookingForm.querySelector('[name="name"]');
+        const phoneInput = bookingForm.querySelector('[name="phone"]');
+        const formErrorEl = document.getElementById('booking-form-error');
+        const calendarCardEl = document.querySelector('.calendar-card-wrapper');
 
-        const updateSubmitState = () => {
-            if (!submitBtn) return;
-            submitBtn.disabled = !(pdConsentCheckbox && pdConsentCheckbox.checked);
+        const FORM_ERROR_TEXT = 'Пожалуйста, заполните все обязательные поля и примите соглашение';
+
+        const clearFieldErrors = () => {
+            nameInput?.classList.remove('error-input');
+            phoneInput?.classList.remove('error-input');
+            consentLabel?.classList.remove('booking-consent--error', 'booking-consent--shake');
         };
 
-        pdConsentCheckbox?.addEventListener('change', updateSubmitState);
-        updateSubmitState();
+        const hideFormErrorBanner = () => {
+            if (!formErrorEl) return;
+            formErrorEl.hidden = true;
+            formErrorEl.textContent = '';
+        };
+
+        const showFormErrorBanner = () => {
+            if (!formErrorEl) return;
+            formErrorEl.textContent = FORM_ERROR_TEXT;
+            formErrorEl.hidden = false;
+        };
+
+        nameInput?.addEventListener('input', () => nameInput.classList.remove('error-input'));
+        phoneInput?.addEventListener('input', () => phoneInput.classList.remove('error-input'));
+        pdConsentCheckbox?.addEventListener('change', () => {
+            if (pdConsentCheckbox.checked) {
+                consentLabel?.classList.remove('booking-consent--error', 'booking-consent--shake');
+            }
+        });
 
         bookingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!pdConsentCheckbox?.checked) {
-                alert("Пожалуйста, подтвердите согласие на обработку персональных данных.");
-                updateSubmitState();
-                return;
+            clearFieldErrors();
+            hideFormErrorBanner();
+
+            const nameOk = !!(nameInput?.value?.trim());
+            const phoneOk = !!(phoneInput?.value?.trim());
+            const datesOk = !!(selectedStart && selectedEnd);
+            const consentOk = !!pdConsentCheckbox?.checked;
+
+            let firstErrorTarget = null;
+
+            if (!nameOk) {
+                nameInput?.classList.add('error-input');
+                firstErrorTarget = firstErrorTarget || nameInput;
             }
-            
-            if (!selectedStart || !selectedEnd) {
-                alert("Пожалуйста, выберите даты заезда и выезда в календаре.");
+            if (!phoneOk) {
+                phoneInput?.classList.add('error-input');
+                firstErrorTarget = firstErrorTarget || phoneInput;
+            }
+            if (!datesOk) {
+                firstErrorTarget = firstErrorTarget || calendarCardEl || checkInInput;
+            }
+            if (!consentOk) {
+                consentLabel?.classList.add('booking-consent--error', 'booking-consent--shake');
+                firstErrorTarget = firstErrorTarget || consentLabel;
+            }
+
+            const hasErrors = !nameOk || !phoneOk || !datesOk || !consentOk;
+            if (hasErrors) {
+                showFormErrorBanner();
+                const scrollTo = firstErrorTarget;
+                if (scrollTo) {
+                    scrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
                 return;
             }
 
@@ -203,10 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedEnd = null;
                 if (priceDisplay) priceDisplay.style.display = 'none';
                 renderCalendar(currentMonth, currentYear); // Обновляем стили календаря
+                clearFieldErrors();
+                hideFormErrorBanner();
             }
             
             submitBtn.textContent = originalText;
-            updateSubmitState();
+            submitBtn.disabled = false;
         });
     }
 

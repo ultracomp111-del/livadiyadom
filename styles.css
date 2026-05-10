@@ -396,6 +396,59 @@ section[id] { scroll-margin-top: 80px; }
 
 .guests-select { cursor: pointer; }
 
+/* Ошибки валидации формы бронирования */
+.booking-form-integrated .error-input {
+    border: 1px solid #ff4d4d;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-form-integrated .error-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.booking-consent.booking-consent--error {
+    color: #c93030;
+}
+
+.booking-consent.booking-consent--error span {
+    color: #e04444;
+    transition: color 0.3s ease;
+}
+
+.booking-consent.booking-consent--error a {
+    color: #e04444;
+}
+
+@keyframes booking-consent-shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+.booking-consent.booking-consent--shake {
+    animation: booking-consent-shake 0.45s ease;
+}
+
+.booking-form-error {
+    margin: 0;
+    margin-top: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #c93030;
+    background: color-mix(in srgb, #ff4d4d 8%, var(--surface-alt));
+    border: 1px solid color-mix(in srgb, #ff4d4d 35%, var(--line));
+    border-radius: 10px;
+    text-align: center;
+}
+
+.booking-form-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
 .price-display {
     background: var(--accent);
     color: white;
