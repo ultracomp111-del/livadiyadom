@@ -298,8 +298,8 @@ section[id] { scroll-margin-top: 80px; }
     display: grid;
     grid-template-columns: 1fr 1fr; /* Ровно пополам */
     gap: 30px;
-    /* Карточки по высоте своего контента: соседняя форма не растягивает календарь */
-    align-items: start;
+    /* Одинаковая высота карточек в строке; сетка дат не тянется за счёт правил .calendar-days / .cal-day */
+    align-items: stretch;
     max-width: 1000px;
     margin: 0 auto 30px auto;
 }
@@ -313,11 +313,6 @@ section[id] { scroll-margin-top: 80px; }
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-}
-
-/* Календарь не тянется по высоте строки грида (дублирует align-items:start для ясности) */
-.calendar-card-wrapper {
-    align-self: start;
 }
 
 .card-title {
@@ -470,9 +465,8 @@ section[id] { scroll-margin-top: 80px; }
 .calendar-widget {
     display: flex;
     flex-direction: column;
-    flex-grow: 0;
-    flex-shrink: 0;
-    align-self: flex-start;
+    flex: 1 1 auto;
+    min-height: 0;
     width: 100%;
     box-sizing: border-box;
 }
@@ -555,7 +549,8 @@ section[id] { scroll-margin-top: 80px; }
     justify-content: center;
     flex-wrap: wrap; /* Чтобы не слипались, если мало места */
     gap: 15px;
-    margin-top: 20px;
+    margin-top: auto;
+    padding-top: 20px;
     font-size: 12px;
 }
 .legend-item { display: flex; align-items: center; gap: 5px; color: var(--text); }
@@ -577,13 +572,26 @@ section[id] { scroll-margin-top: 80px; }
 .contact-link { color: var(--accent); font-weight: 700; font-size: 22px; text-decoration: none;display:block;margin-top: 15px;}
 
 /* КАРТА */
-.map-card { padding: 15px; } /* Чуть меньше отступов для самой карты */
+.map-card {
+    padding: 15px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-card .map-wrapper {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 .static-map {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
     min-height: 250px;
     background-image: url('./icons/map.jpg');
     background-size: cover;
