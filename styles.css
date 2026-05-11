@@ -298,7 +298,8 @@ section[id] { scroll-margin-top: 80px; }
     display: grid;
     grid-template-columns: 1fr 1fr; /* Ровно пополам */
     gap: 30px;
-    align-items: stretch; /* Растягивает карточки по высоте самой высокой */
+    /* Карточки по высоте своего контента: соседняя форма не растягивает календарь */
+    align-items: start;
     max-width: 1000px;
     margin: 0 auto 30px auto;
 }
@@ -311,6 +312,12 @@ section[id] { scroll-margin-top: 80px; }
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+}
+
+/* Календарь не тянется по высоте строки грида (дублирует align-items:start для ясности) */
+.calendar-card-wrapper {
+    align-self: start;
 }
 
 .card-title {
@@ -463,7 +470,11 @@ section[id] { scroll-margin-top: 80px; }
 .calendar-widget {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Чтобы календарь занимал всю карточку */
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-self: flex-start;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .calendar-header {
@@ -503,12 +514,19 @@ section[id] { scroll-margin-top: 80px; }
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    flex-grow: 1; /* Растягивает сетку по высоте */
+    flex-grow: 0;
+    box-sizing: border-box;
+    /* Лишняя высота контейнера не растягивает строки сетки */
+    align-content: start;
+    /* До 6 строк дат + отступы между рядами — стабильная высота блока дат */
+    min-height: calc(6 * 48px + 5 * 4px);
 }
 
-/* ИСПРАВЛЕНИЕ: Убрали aspect-ratio: 1/1, чтобы даты не выезжали из сетки на широких экранах */
 .cal-day {
-    min-height: 45px; 
+    box-sizing: border-box;
+    height: 48px;
+    min-height: 48px;
+    max-height: 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -518,8 +536,10 @@ section[id] { scroll-margin-top: 80px; }
     cursor: pointer;
     transition: 0.2s;
     border: 1px solid transparent;
-    padding: 4px 0;
-	font-weight: bold;
+    padding: 2px 4px;
+    font-weight: bold;
+    line-height: 1.1;
+    overflow: hidden;
 }
 
 .cal-day.empty { cursor: default; }
@@ -708,8 +728,16 @@ section[id] { scroll-margin-top: 80px; }
     .cookie-banner__text { font-size: 11px; }
     .cookie-banner__btn { min-height: 34px; padding: 8px 12px; }
     
-    .cal-day { font-size: 12px; min-height: 38px; }
+    .cal-day {
+        font-size: 12px;
+        height: 38px;
+        min-height: 38px;
+        max-height: 38px;
+    }
     .cal-day .price { font-size: 8px; }
+    .calendar-days {
+        min-height: calc(6 * 38px + 5 * 4px);
+    }
 }
 
 /* Мобильные телефоны (схлопываем в один столбец ТОЛЬКО с 650px) */
