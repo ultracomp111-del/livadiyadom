@@ -175,57 +175,231 @@ body {
 .fs-next { right: 0; }
 
 .footer-simple { padding: 40px 0; border-top: 1px solid var(--line); margin-top: 40px; }
-.footer-privacy-link {
-    color: var(--muted);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+
+.footer-simple__inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
-.footer-privacy-link:hover {
+
+.footer-simple__line {
+    margin: 0;
+    display: inline;
+    line-height: 1.5;
+}
+
+.footer-simple__inner--cta {
+    flex-wrap: wrap;
+    gap: 14px 20px;
+}
+
+.footer-privacy-link {
+    font-size: inherit;
+    font-weight: 500;
     color: var(--accent);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.footer-privacy-link:hover {
+    border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    opacity: 0.92;
+}
+
+.privacy-inline-link {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.privacy-inline-link:hover {
+    opacity: 0.85;
+    border-bottom-color: var(--accent);
+}
+
+.pd-consent-block {
+    margin-top: 4px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: var(--surface-alt);
+    border: 1px solid var(--line);
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.pd-consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--muted);
+    user-select: none;
+}
+
+.pd-consent-label input[type="checkbox"] {
+    margin-top: 3px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.pd-consent-text {
+    transition: color 0.2s;
+}
+
+.pd-consent-label--error .pd-consent-text {
+    color: #ff4d4d;
+}
+
+.pd-consent-label--error .privacy-inline-link {
+    color: #ff4d4d;
+    border-bottom-color: color-mix(in srgb, #ff4d4d 40%, transparent);
+}
+
+@keyframes consent-shake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-6px); }
+    30% { transform: translateX(6px); }
+    45% { transform: translateX(-5px); }
+    60% { transform: translateX(5px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(3px); }
+}
+
+.pd-consent-block--shake {
+    animation: consent-shake 0.55s ease;
+}
+
+.booking-form-integrated input.error-input,
+.booking-form-integrated select.error-input,
+.booking-form-integrated textarea.error-input {
+    border: 1px solid #ff4d4d;
+    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
+}
+
+.form-feedback {
+    margin: 0;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: center;
+    min-height: 0;
+    transition: opacity 0.25s ease;
+}
+
+.form-feedback:not([hidden]) {
+    min-height: 2.8em;
+}
+
+.form-feedback--error {
+    color: #ff4d4d;
+    font-weight: 500;
+}
+
+.form-feedback--success {
+    color: #1b5e20;
+    font-weight: 600;
+}
+
+[data-theme="dark"] .form-feedback--success {
+    color: #81c784;
+}
+
+.calendar-hint {
+    flex: 0 0 auto;
+    min-height: 1.25em;
+    margin: 8px 0 0;
+    font-size: 13px;
+    text-align: center;
+    color: var(--muted);
+    transition: color 0.2s;
+}
+
+.calendar-hint--error {
+    color: #ff4d4d;
+    font-weight: 500;
 }
 
 .cookie-banner {
     position: fixed;
-    right: 16px;
-    bottom: max(16px, env(safe-area-inset-bottom));
-    z-index: 1200;
-    max-width: 380px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    z-index: 3000;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 8px 10px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05);
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 10px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    background: rgba(28, 28, 30, 0.92);
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-
-.cookie-banner[hidden] {
-    display: none !important;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .cookie-banner__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 11px;
+    line-height: 1.3;
+    color: var(--muted);
     margin: 0;
-    font-size: 12px;
-    line-height: 1.35;
 }
 
-.cookie-banner__text a {
-    color: #ffffff;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-
-.cookie-banner__btn {
+.cookie-banner__accept {
+    flex-shrink: 0;
+    padding: 6px 12px;
     border: none;
     border-radius: 999px;
-    padding: 9px 14px;
-    min-height: 36px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 1.2;
     white-space: nowrap;
     cursor: pointer;
-    font-weight: 600;
-    background: #ffffff;
-    color: #1c1c1e;
+    transition: transform 0.15s ease, opacity 0.2s;
+}
+
+.cookie-banner__accept:hover {
+    opacity: 0.92;
+}
+
+.cookie-banner__accept:active {
+    transform: scale(0.97);
+}
+
+@media (min-width: 600px) {
+    .cookie-banner {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 9px 12px;
+        gap: 10px;
+        max-width: 520px;
+    }
+
+    .cookie-banner__text {
+        font-size: 12px;
+        line-height: 1.35;
+    }
+
+    .cookie-banner__accept {
+        padding: 7px 14px;
+        font-size: 12px;
+    }
 }
 
 /* Десктоп Шапка */
@@ -247,11 +421,11 @@ body {
 }
 @media (max-width: 450px) {
     .nav__links { gap: 15px; }
-    .nav a { font-size: 15px; }
+    .nav a { font-size: 14px; }
 }
-@media (max-width: 362px) {
+@media (max-width: 369px) {
     .nav__links { gap: 12px; }
-    .nav a { font-size: 15px; }
+    .nav a { font-size: 13px; }
 }
 
 /* Grid Split Секции (О доме / Галерея) */
@@ -298,8 +472,7 @@ section[id] { scroll-margin-top: 80px; }
     display: grid;
     grid-template-columns: 1fr 1fr; /* Ровно пополам */
     gap: 30px;
-    /* Одинаковая высота карточек в строке; сетка дат не тянется за счёт правил .calendar-days / .cal-day */
-    align-items: stretch;
+    align-items: stretch; /* Карточки одной высоты; ячейки календаря не растягиваются */
     max-width: 1000px;
     margin: 0 auto 30px auto;
 }
@@ -312,7 +485,6 @@ section[id] { scroll-margin-top: 80px; }
     box-shadow: var(--shadow);
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
 }
 
 .card-title {
@@ -328,7 +500,6 @@ section[id] { scroll-margin-top: 80px; }
     display: flex;
     flex-direction: column;
     gap: 12px;
-    height: 100%;
 }
 
 .form-row {
@@ -359,97 +530,11 @@ section[id] { scroll-margin-top: 80px; }
 }
 
 .booking-form-integrated textarea {
-    flex-grow: 1; /* Растягивает текстовое поле до низа */
     min-height: 80px;
     resize: none;
 }
 
-.booking-consent {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.45;
-    cursor: pointer;
-    min-height: 44px;
-    padding: 6px 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.booking-consent input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    margin-top: 2px;
-    flex-shrink: 0;
-    accent-color: var(--accent);
-    cursor: pointer;
-}
-
-.booking-consent a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-
-.booking-consent a:hover {
-    color: var(--accent);
-}
-
 .guests-select { cursor: pointer; }
-
-/* Ошибки валидации формы бронирования */
-.booking-form-integrated .error-input {
-    border: 1px solid #ff4d4d;
-    box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.18);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.booking-form-integrated .error-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
-}
-
-.booking-consent.booking-consent--error {
-    color: #c93030;
-}
-
-.booking-consent.booking-consent--error span {
-    color: #e04444;
-    transition: color 0.3s ease;
-}
-
-.booking-consent.booking-consent--error a {
-    color: #e04444;
-}
-
-@keyframes booking-consent-shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
-}
-
-.booking-consent.booking-consent--shake {
-    animation: booking-consent-shake 0.45s ease;
-}
-
-.booking-form-error {
-    margin: 0;
-    margin-top: 10px;
-    padding: 10px 12px;
-    font-size: 13px;
-    line-height: 1.45;
-    color: #c93030;
-    background: color-mix(in srgb, #ff4d4d 8%, var(--surface-alt));
-    border: 1px solid color-mix(in srgb, #ff4d4d 35%, var(--line));
-    border-radius: 10px;
-    text-align: center;
-}
-
-.booking-form-submit:disabled {
-    opacity: 0.65;
-    cursor: not-allowed;
-}
 
 .price-display {
     background: var(--accent);
@@ -458,17 +543,24 @@ section[id] { scroll-margin-top: 80px; }
     border-radius: 12px;
     text-align: center;
     font-weight: 700;
-    margin-top: auto;
 }
 
 /* КАЛЕНДАРЬ */
+.calendar-card-wrapper {
+    align-self: stretch;
+    min-height: 100%;
+}
+
 .calendar-widget {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.calendar-widget__stretch {
     flex: 1 1 auto;
     min-height: 0;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .calendar-header {
@@ -508,19 +600,14 @@ section[id] { scroll-margin-top: 80px; }
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    flex-grow: 0;
-    box-sizing: border-box;
-    /* Лишняя высота контейнера не растягивает строки сетки */
+    flex: 0 0 auto;
     align-content: start;
-    /* До 6 строк дат + отступы между рядами — стабильная высота блока дат */
-    min-height: calc(6 * 48px + 5 * 4px);
 }
 
 .cal-day {
-    box-sizing: border-box;
-    height: 48px;
-    min-height: 48px;
-    max-height: 48px;
+    height: 45px;
+    min-height: 45px;
+    max-height: 45px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -530,10 +617,8 @@ section[id] { scroll-margin-top: 80px; }
     cursor: pointer;
     transition: 0.2s;
     border: 1px solid transparent;
-    padding: 2px 4px;
-    font-weight: bold;
-    line-height: 1.1;
-    overflow: hidden;
+    padding: 4px 0;
+	font-weight: bold;
 }
 
 .cal-day.empty { cursor: default; }
@@ -549,8 +634,7 @@ section[id] { scroll-margin-top: 80px; }
     justify-content: center;
     flex-wrap: wrap; /* Чтобы не слипались, если мало места */
     gap: 15px;
-    margin-top: auto;
-    padding-top: 20px;
+    margin-top: 20px;
     font-size: 12px;
 }
 .legend-item { display: flex; align-items: center; gap: 5px; color: var(--text); }
@@ -572,26 +656,13 @@ section[id] { scroll-margin-top: 80px; }
 .contact-link { color: var(--accent); font-weight: 700; font-size: 22px; text-decoration: none;display:block;margin-top: 15px;}
 
 /* КАРТА */
-.map-card {
-    padding: 15px;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.map-card .map-wrapper {
-    flex: 1 1 auto;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
+.map-card { padding: 15px; } /* Чуть меньше отступов для самой карты */
 .static-map {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    flex: 1 1 auto;
+    height: 100%;
     min-height: 250px;
     background-image: url('./icons/map.jpg');
     background-size: cover;
@@ -725,27 +796,9 @@ section[id] { scroll-margin-top: 80px; }
     .booking-form-integrated input, 
     .booking-form-integrated select, 
     .booking-form-integrated textarea { padding: 10px; font-size: 13px; }
-    .booking-consent { font-size: 11px; }
-    .cookie-banner {
-        left: 12px;
-        right: 12px;
-        bottom: max(12px, env(safe-area-inset-bottom));
-        max-width: none;
-        padding: 10px 12px;
-    }
-    .cookie-banner__text { font-size: 11px; }
-    .cookie-banner__btn { min-height: 34px; padding: 8px 12px; }
     
-    .cal-day {
-        font-size: 12px;
-        height: 38px;
-        min-height: 38px;
-        max-height: 38px;
-    }
+    .cal-day { font-size: 12px; height: 38px; min-height: 38px; max-height: 38px; }
     .cal-day .price { font-size: 8px; }
-    .calendar-days {
-        min-height: calc(6 * 38px + 5 * 4px);
-    }
 }
 
 /* Мобильные телефоны (схлопываем в один столбец ТОЛЬКО с 650px) */

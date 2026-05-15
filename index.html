@@ -133,9 +133,9 @@
           <div class="booking-grid-wrapper">
             <div class="booking-card">
               <h3 class="card-title">Оставить заявку</h3>
-              <form id="booking-form" class="booking-form-integrated">
-                <input type="text" name="name" placeholder="Ваше имя" required />
-                <input type="tel" name="phone" placeholder="Телефон" required />
+              <form id="booking-form" class="booking-form-integrated" novalidate>
+                <input type="text" id="booking-name" name="name" placeholder="Ваше имя" autocomplete="name" />
+                <input type="tel" id="booking-phone" name="phone" placeholder="Телефон" autocomplete="tel" />
 
                 <div class="form-row">
                   <div class="input-group">
@@ -159,13 +159,14 @@
 
                 <div id="price-display" class="price-display" style="display: none">Итоговая стоимость: <span id="total-price">0</span> ₽</div>
 
-                <label for="pd-consent" class="booking-consent">
-                  <input type="checkbox" id="pd-consent" name="pd_consent" />
-                  <span>Я согласен на обработку персональных данных в соответствии с <a href="./privacy.html">Политикой конфиденциальности</a>.</span>
-                </label>
-
-                <button type="submit" class="btn-main booking-form-submit" style="width: 100%; margin-top: auto">📥 Отправить заявку</button>
-                <p id="booking-form-error" class="booking-form-error" role="alert" aria-live="polite" hidden></p>
+                <div id="pd-consent-wrap" class="pd-consent-block">
+                  <label class="pd-consent-label" for="pd-consent">
+                    <input type="checkbox" id="pd-consent" name="pd_consent" />
+                    <span class="pd-consent-text">Я согласен на обработку персональных данных в соответствии с <a href="./privacy.html" class="privacy-inline-link">Политикой конфиденциальности</a>.</span>
+                  </label>
+                </div>
+                <button type="submit" class="btn-main booking-form__submit" style="width: 100%; margin-top: auto">📥 Отправить заявку</button>
+                <p id="booking-form-feedback" class="form-feedback" hidden></p>
               </form>
             </div>
 
@@ -187,6 +188,8 @@
                   <div>Вс</div>
                 </div>
                 <div id="calendar-days" class="calendar-days"></div>
+                <div class="calendar-widget__stretch" aria-hidden="true"></div>
+                <p id="calendar-hint" class="calendar-hint" role="status" aria-live="polite"></p>
                 <div class="calendar-legend">
                   <span class="legend-item"><span class="legend-color legend-free"></span> Свободно</span>
                   <span class="legend-item"><span class="legend-color legend-booked"></span> Занято</span>
@@ -284,8 +287,11 @@
     </main>
 
     <footer class="footer-simple">
-      <div class="container text-center">
-        <p class="muted">© <span data-year>2026</span> • Ливадия, Ялта • <a href="./privacy.html" class="footer-privacy-link">Политика конфиденциальности</a></p>
+      <div class="container footer-simple__inner">
+        <p class="muted footer-simple__line">
+          © <span data-year>2026</span> • Ливадия, Ялта •
+          <a href="./privacy.html" class="footer-privacy-link">Политика конфиденциальности</a>
+        </p>
       </div>
     </footer>
 
@@ -295,15 +301,6 @@
       <img class="fs-img" id="fs-img" />
       <button class="fs-nav fs-next" id="fs-next">›</button>
     </div>
-
-    <div class="cookie-banner" id="cookie-banner" role="dialog" aria-live="polite" aria-label="Уведомление об использовании cookie" hidden>
-      <p class="cookie-banner__text">
-        Мы используем файлы cookie для улучшения работы сайта. Оставаясь на сайте, вы соглашаетесь с
-        <a href="./privacy.html">Политикой конфиденциальности</a>.
-      </p>
-      <button type="button" class="cookie-banner__btn" id="cookie-accept">Принять</button>
-    </div>
-
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
   </body>
 </html>
