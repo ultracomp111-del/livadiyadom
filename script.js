@@ -6,7 +6,7 @@ import { sendTelegramMessage } from './api/mail.js';
 const MY_BOOKINGS = {
 	defaultPrice: 3000, 
 	availableMonths: [ 5, 6, 7, 8, 9, 10], // Месяцы (5 = Май)
-	monthlyPrices: { 5: 2700, 6: 3000, 7: 3000, 8: 3500, 9: 3000, 10: 2700 },
+	monthlyPrices: { 5: 3000, 6: 4000, 7: 4000, 8: 4500, 9: 3500, 10: 3000 },
 	specialPrices: {  },
 	bookedFullMonths: [], // Полностью занятые месяцы
 	bookedDates: [] // Занятые дни ["2026-05-20",] - пример
