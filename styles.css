@@ -178,15 +178,25 @@ body {
 
 .footer-simple__inner {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 8px;
 }
 
-.footer-simple__line {
-    margin: 0;
-    display: inline;
+.footer-simple__row {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4em;
+    width: 100%;
+    max-width: 100%;
     line-height: 1.5;
+}
+
+.footer-simple__row--legal {
+    color: var(--muted);
 }
 
 .footer-simple__inner--cta {
@@ -199,9 +209,40 @@ body {
     font-weight: 500;
     color: var(--accent);
     text-decoration: none;
-    white-space: nowrap;
     border-bottom: 1px solid transparent;
     transition: color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+@media (min-width: 768px) {
+    .footer-simple__row--main,
+    .footer-simple__row--legal {
+        white-space: nowrap;
+    }
+
+    .footer-privacy-link {
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .footer-simple__row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .footer-simple__dot {
+        display: none;
+    }
+
+    .footer-simple__row--main .footer-privacy-link::before {
+        content: "• ";
+        color: var(--text);
+        font-weight: 400;
+    }
+
+    .footer-privacy-link {
+        white-space: normal;
+    }
 }
 
 .footer-privacy-link:hover {
@@ -732,7 +773,9 @@ section[id] { scroll-margin-top: 80px; }
     background-color: #0088cc; /* Синий Telegram */
     color: white;
 }
-
+.social-icon.max:hover {
+  color: #005bff; /* официальный синий цвет платформы МАКС */
+}
 /* ========================================= */
 /* Скелетон */
 /* ========================================= */
