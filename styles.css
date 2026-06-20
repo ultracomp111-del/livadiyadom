@@ -764,17 +764,18 @@ section[id] { scroll-margin-top: 80px; }
 }
 
 /* Цвета брендов при наведении */
-.social-icon.wa:hover {
+.social-icon.wa {
     background-color: #25D366; /* Зеленый WhatsApp */
     color: white;
 }
 
-.social-icon.tg:hover {
+.social-icon.tg {
     background-color: #0088cc; /* Синий Telegram */
     color: white;
 }
-.social-icon.max:hover {
-  color: #005bff; /* официальный синий цвет платформы МАКС */
+.social-icon.max {
+  background-color: #005bff; /* официальный синий цвет платформы МАКС */
+  color: white;
 }
 /* ========================================= */
 /* Скелетон */
