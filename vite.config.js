@@ -13,6 +13,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         livadia: resolve(__dirname, 'livadia.html'),
 		privacy: resolve(__dirname, 'privacy.html'),
+		rules: resolve(__dirname, 'rules.html'),
       },
     },
   },
